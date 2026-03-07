@@ -16,5 +16,6 @@ en:
   label_line_items: "Line Items"
   label_price: "Unit Price"
   label_qty: "Quantity"
+  label_remove: "Remove"
   label_total: "Total"
   

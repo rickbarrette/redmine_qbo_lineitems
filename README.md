@@ -49,22 +49,27 @@ The alternative approach would be to modify an invoice directly after it is asso
 
 Navigate to your Redmine plugins directory:
 
+```bash
 cd /path/to/redmine/plugins  
-git clone git@github.com:rickbarrette/z\_redmine\_qbo\_lineitems.git  
-cd z\_redmine\_qbo\_lineitems  
+git clone https://github.com/rickbarrette/redmine_qbo_lineitems.git  
+cd redmine_qbo_lineitems  
   
-\# Optional: checkout a specific version  
+# Optional: checkout a specific version  
 git checkout <tag>
+```
+
 
 2.  **Install dependencies**
     
-
+```bash
 bundle install
+```
 
 3.  **Migrate your database**
     
-
-bundle exec rake redmine:plugins:migrate RAILS\_ENV\=production
+```bash
+bundle exec rake redmine:plugins:migrate RAILS_ENV=production
+```
 
 4.  **Restart Redmine**
     

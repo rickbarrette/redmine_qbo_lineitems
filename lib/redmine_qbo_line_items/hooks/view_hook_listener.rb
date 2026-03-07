@@ -30,6 +30,7 @@ module RedmineQboLineItems
         )
       end
 
+      render_on :view_issues_show_description_bottom , partial: 'line_items/issue_line_items'
       
     end
   end

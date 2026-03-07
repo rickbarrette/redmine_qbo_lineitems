@@ -1,0 +1,40 @@
+<% if @issue.line_items.any? %>
+<hr/>
+<div>
+  <p><strong>Line Items</strong></p>
+
+  <table class="list line-items-table">
+    <thead>
+      <tr>
+        <th>Description</th>
+        <th style="width:120px;">Quantity</th>
+        <th style="width:150px;">Unit Price</th>
+        <th style="width:150px;">Total</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% total = 0 %>
+
+      <% @issue.line_items.each do |item| %>
+        <% line_total = item.quantity.to_f * item.unit_price.to_f %>
+        <% total += line_total %>
+
+        <tr>
+          <td><%= h item.description %></td>
+          <td><%= item.quantity %></td>
+          <td><%= number_to_currency(item.unit_price) %></td>
+          <td><%= number_to_currency(line_total) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+
+    <tfoot>
+      <tr>
+        <td colspan="3" style="text-align:right;"><strong>Total</strong></td>
+        <td><strong><%= number_to_currency(total) %></strong></td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
+<% end %>

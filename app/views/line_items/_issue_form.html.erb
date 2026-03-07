@@ -1,6 +1,8 @@
-<% @issue.line_items.build if @issue.line_items.empty? %>
+<% readonly = @issue.status.is_closed? %>
 
-<div class="box tabular" data-nested-form data-wrapper-selector=".line-item">
+<% @issue.line_items.build if @issue.line_items.empty? && !readonly %>
+
+<div class="box tabular" <%= 'data-nested-form data-wrapper-selector=".line-item"' unless readonly %>>
   <p><strong>Line Items</strong></p>
 
   <table class="list line-items-table">
@@ -9,26 +11,30 @@
         <th>Description</th>
         <th style="width:120px;">Quantity</th>
         <th style="width:150px;">Unit Price</th>
-        <th style="width:80px;"></th>
+        <% unless readonly %>
+          <th style="width:80px;"></th>
+        <% end %>
       </tr>
     </thead>
 
-    <tbody data-nested-form-container>
+    <tbody <%= 'data-nested-form-container' unless readonly %>>
       <%= f.fields_for :line_items do |item_form| %>
-        <%= render "line_items/line_item_fields", f: item_form %>
+        <%= render "line_items/line_item_fields", f: item_form, readonly: readonly %>
       <% end %>
     </tbody>
   </table>
 
-  <template data-nested-form-template>
-    <%= f.fields_for :line_items, LineItem.new, child_index: "NEW_RECORD" do |item_form| %>
-      <%= render "line_items/line_item_fields", f: item_form %>
-    <% end %>
-  </template>
+  <% unless readonly %>
+    <template data-nested-form-template>
+      <%= f.fields_for :line_items, LineItem.new, child_index: "NEW_RECORD" do |item_form| %>
+        <%= render "line_items/line_item_fields", f: item_form, readonly: false %>
+      <% end %>
+    </template>
 
-  <p>
-    <button type="button" class="icon icon-add" data-nested-form-add>
-      Add Line Item
-    </button>
-  </p>
+    <p>
+      <button type="button" class="icon icon-add" data-nested-form-add>
+        Add Line Item
+      </button>
+    </p>
+  <% end %>
 </div>

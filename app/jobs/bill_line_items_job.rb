@@ -12,8 +12,10 @@ class BillLineItemsJob < ActiveJob::Base
   queue_as :default
   retry_on StandardError, wait: 5.minutes, attempts: 5
 
-  # Perform billing of unbilled time entries for a given issue by creating corresponding TimeActivity records in QuickBooks Online, and then marking those entries as billed in Redmine. This job is typically triggered after an invoice is created or updated to ensure all relevant time is captured for billing.
+  # Creates an estimate for a line items attached to an issue, and then marking those entries as billed in Redmine.
+  # This job is typically triggered after an issue is closed.
   def perform(issue)
+    return unless issue.customer
 
     log "Starting billing for issue ##{issue.id}"
     issue.with_lock do
@@ -38,7 +40,7 @@ class BillLineItemsJob < ActiveJob::Base
 
   private
 
-  # Create TimeActivity records in QBO for each activity type with the appropriate hours and link them to the issue's assigned employee and customer
+  # Create an Estimate record in QBO for each unbilled line item
   def create_estimate(issue, unbilled_entries, access_token, qbo)
     log "Creating Estimate records in QBO for #{issue.customer.name} from issue ##{issue.id}"
     

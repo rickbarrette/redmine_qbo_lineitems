@@ -20,7 +20,9 @@ module RedmineQboLineItems
 
         base.class_eval do
           has_many :line_items, dependent: :destroy
-          accepts_nested_attributes_for :line_items, allow_destroy: true
+          accepts_nested_attributes_for :line_items, 
+            allow_destroy: true, 
+            reject_if: proc { |attrs| attrs['description'].blank? }
         end
         
       end

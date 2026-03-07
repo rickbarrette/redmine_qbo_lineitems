@@ -11,5 +11,10 @@
 # English strings go here for Rails i18n
 # Usage I18n.t(:label)
 en:
+  label_description: "Description"
   label_item: "Item"
+  label_line_items: "Line Items"
+  label_price: "Unit Price"
+  label_qty: "Quantity"
+  label_total: "Total"
   

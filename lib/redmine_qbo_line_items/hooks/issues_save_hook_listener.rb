@@ -1,6 +1,6 @@
 #The MIT License (MIT)
 #
-#Copyright (c) 2016 - 2026 rick barrette
+#Copyright (c) 2017 rick barrette
 #
 #Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 #
@@ -8,37 +8,24 @@
 #
 #THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-class CreateLineItems < ActiveRecord::Migration[7.0]
-  def change
-    create_table :line_items do |t|
-      t.integer :issue_id, null: false
+module RedmineQboLineItems
+  module Hooks
 
-      t.text    :description, null: false
+    class IssuesSaveHookListener < Redmine::Hook::ViewListener
 
-      t.decimal :quantity,
-                precision: 15,
-                scale: 4,
-                null: false,
-                default: 0
+      # Called After Issue Saved
+      def controller_issues_edit_after_save(context={})
+        log "Enqueuing billing of item items for issue ##{context[:issue]}"
+        issue = context[:issue]
+        BillLineItemsJob.perform_later(issue) if issue.status.is_closed?
+      end
 
-      t.decimal :unit_price,
-                precision: 15,
-                scale: 4,
-                null: false,
-                default: 0
+      private
 
-      t.decimal :line_total,
-                precision: 15,
-                scale: 4,
-                null: false,
-                default: 0
+      def log(msg)
+        Rails.logger.info "[IssuesSaveHookListener] #{msg}"
+      end
 
-      t.boolean :billed
-
-      t.timestamps
     end
-
-    add_index :line_items, :issue_id
-    add_foreign_key :line_items, :issues
   end
 end

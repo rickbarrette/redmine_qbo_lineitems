@@ -20,7 +20,7 @@ module RedmineQboLineItems
         ])
       end
 
-      def view_issues_form_details_bottom(context = {})
+      def view_issues_edit_notes_bottom(context = {})
         context[:controller].send(:render_to_string, {
           partial: 'line_items/issue_form',
             locals: {

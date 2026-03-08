@@ -46,7 +46,7 @@ class BillLineItemsJob < ActiveJob::Base
     
     estimate = Quickbooks::Model::Estimate.new(customer_id: issue.customer.id)
     estimate_service = Quickbooks::Service::Estimate.new( company_id: qbo.realm_id,  access_token: access_token)
-    estimate.line_items << Quickbooks::Model::InvoiceLineItem.new(description: "Added from issue ##{issue.id} #{issue.subject}", detail_type: 'DescriptionOnly' )
+    estimate.line_items << Quickbooks::Model::InvoiceLineItem.new(description: "#{I18n.t(:notice_added_from)}#{issue.id} #{issue.subject}", detail_type: 'DescriptionOnly' )
     
     unbilled_entries.each do |item|
       log "Creating Line Item for #{item.description}"

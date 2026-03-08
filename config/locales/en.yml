@@ -18,4 +18,5 @@ en:
   label_qty: "Quantity"
   label_remove: "Remove"
   label_total: "Total"
+  notice_added_from: "Added from issue #"
   

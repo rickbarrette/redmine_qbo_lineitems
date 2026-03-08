@@ -6,14 +6,15 @@
      data-nested-form
      data-wrapper-selector=".line-item">
 
-  <p><strong><%= t :label_line_items %></strong></p>
+  <strong><%= t :label_line_items %></strong>
 
   <table class="list line-items-table">
     <thead>
       <tr>
-        <th><%= t :label_description %></th>
-        <th style="width:120px;"><%= t :label_qty %></th>
-        <th style="width:150px;"><%= t :label_price %></th>
+        <th style="width:60%;"><%= t :label_description %></th>
+        <th style="width:10%;"><%= t :label_qty %></th>
+        <th style="width:10%;"><%= t :label_price %></th>
+        <th style="width:10%;"><%= t :label_total %></th>
         <% unless readonly %>
           <th style="width:80px;"></th>
         <% end %>
@@ -28,6 +29,11 @@
       <% end %>
     </tbody>
   </table>
+
+  <p class="line-items-grand-total">
+    <strong><%= t :label_total %>:</strong>
+    <span id="line-items-grand-total">0.00</span>
+  </p>
 
   <% unless readonly %>
     <template data-nested-form-template>

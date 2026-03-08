@@ -1,0 +1,58 @@
+.line-items-table {
+  width: 100%;
+}
+
+.line-items-table input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.qty-field {
+  max-width: 90px;
+}
+
+.price-field {
+  max-width: 120px;
+}
+
+/* MOBILE MODE */
+@media screen and (max-width: 700px) {
+
+  .line-items-table thead {
+    display: none;
+  }
+
+  .line-items-table,
+  .line-items-table tbody,
+  .line-items-table tr,
+  .line-items-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .line-items-table tr {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 10px;
+    margin-bottom: 10px;
+    background: #fff;
+  }
+
+  .line-items-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+  }
+
+  .line-items-table td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    margin-right: 10px;
+  }
+
+  .line-items-table td.actions {
+    justify-content: flex-end;
+  }
+
+}

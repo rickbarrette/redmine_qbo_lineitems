@@ -2,36 +2,39 @@
   <%= f.hidden_field :id %>
   <%= f.hidden_field :_destroy %>
 
-  <td>
+  <td data-label="<%= t :label_description %>">
     <%= f.text_field :description,
-          size: 50,
           placeholder: l(:label_description),
           no_label: true,
           disabled: readonly %>
   </td>
 
-  <td>
+  <td data-label="<%= t :label_qty %>">
     <%= f.number_field :quantity,
           step: 1,
           min: 0,
-          style: "width:90px;",
+          class: "qty-field",
           no_label: true,
           disabled: readonly %>
   </td>
 
-  <td>
+  <td data-label="<%= t :label_price %>">
     <%= f.number_field :unit_price,
           step: 0.01,
-          style: "width:120px;",
+          class: "price-field",
           no_label: true,
           disabled: readonly %>
+  </td>
+
+  <td class="line-total" data-label="<%= t :label_total %>">
+    0.00
   </td>
 
   <% unless readonly %>
-    <td style="text-align:center;">
+    <td class="actions">
       <button type="button"
               class="icon-only icon-del"
-              title="<%=l(:label_remove)%>"
+              title="<%= l(:label_remove) %>"
               data-nested-form-remove>
       </button>
     </td>

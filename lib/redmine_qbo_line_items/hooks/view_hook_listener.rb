@@ -16,7 +16,9 @@ module RedmineQboLineItems
       # Load the javascript to support the autocomplete forms
       def view_layouts_base_html_head(context = {})
         safe_join([
-          javascript_include_tag( 'nested_form_controller.js', plugin: :redmine_qbo_lineitems)
+          javascript_include_tag( 'nested_form_controller.js', plugin: :redmine_qbo_lineitems),
+          javascript_include_tag("line_items", plugin: :redmine_qbo_lineitems),
+          stylesheet_link_tag("line_items", plugin: :redmine_qbo_lineitems)
         ])
       end
 

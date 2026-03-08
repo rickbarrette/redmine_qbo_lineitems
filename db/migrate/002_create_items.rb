@@ -11,7 +11,6 @@
 class CreateItems < ActiveRecord::Migration[7.0]
   def change
     create_table :items do |t|
-      t.integer :qbo_id, null: false
       t.text    :description, null: false
       t.decimal :unit_price,
                 precision: 15,

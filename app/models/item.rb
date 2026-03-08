@@ -11,9 +11,10 @@
 class Item < ApplicationRecord
   belongs_to :issue
 
-  validates :description, presence: true
+  validates_presence_of :id, :description
   validates :unit_price, numericality: { greater_than_or_equal_to: 0 }
-  
+  self.primary_key = :id
+
   # Sync all employees, typically triggered by a scheduled task or manual sync request
   def self.sync
     ItemSyncJob.perform_later(full_sync: true)

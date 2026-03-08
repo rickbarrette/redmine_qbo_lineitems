@@ -24,7 +24,7 @@ class ItemSyncService < SyncServiceBase
 
   # Map relevant attributes from the QBO Employee to the local Employee model
   def process_attributes(local, remote)
-    local.qbo_id  = remote.id
+    local.id  = remote.id
     local.description = remote.description
     local.unit_price = remote.unit_price
   end

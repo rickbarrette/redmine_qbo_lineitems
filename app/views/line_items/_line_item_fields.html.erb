@@ -15,7 +15,8 @@
   <td data-label="<%= t :label_qty %>">
     <%= f.number_field :quantity,
           step: 1,
-          min: 0,
+          min: 1,
+          value: (f.object.quantity.to_i > 0) ? f.object.quantity : 1,
           class: "qty-field",
           no_label: true,
           disabled: readonly %>

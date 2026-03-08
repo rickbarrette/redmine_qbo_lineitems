@@ -15,12 +15,12 @@ class Item < ApplicationRecord
   validates :unit_price, numericality: { greater_than_or_equal_to: 0 }
   self.primary_key = :id
 
-  # Sync all employees, typically triggered by a scheduled task or manual sync request
+  # Sync all items, typically triggered by a scheduled task or manual sync request
   def self.sync
     ItemSyncJob.perform_later(full_sync: true)
   end
 
-  # Sync a single employee by ID, typically triggered by a webhook notification or manual sync request
+  # Sync a single items by ID, typically triggered by a webhook notification or manual sync request
   def self.sync_by_id(id)
     ItemSyncJob.perform_later(id: id)
   end

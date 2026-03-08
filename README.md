@@ -21,7 +21,7 @@ This plugin allows **billable line items** to be attached to a Redmine issue. Wh
 
 | Plugin Version | Redmine Version | Ruby Version |
 | --- | --- | --- |
-| 2026.3.2+ | 6.1.x | 3.2+ |
+| 2026.3.3+ | 6.1.x | 3.2+ |
 
 ---
 

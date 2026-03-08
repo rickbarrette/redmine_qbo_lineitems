@@ -22,7 +22,11 @@
             Date.now().toString()
           );
 
+          //container.insertAdjacentHTML("beforeend", content);
           container.insertAdjacentHTML("beforeend", content);
+
+          // initialize autocomplete on the new row
+          initLineItemAutocomplete(container.lastElementChild);
         }
 
         // REMOVE
@@ -51,3 +55,10 @@
   // Works for Turbo navigation
   document.addEventListener("turbo:load", initNestedForms);
 })();
+
+$(document).on("input", ".line-item-description", function(){
+
+  let row = $(this).closest(".line-item");
+  row.find(".item-id-field").val("");
+
+});

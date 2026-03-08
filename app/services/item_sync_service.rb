@@ -8,24 +8,25 @@
 #
 #THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-class LineItem < ApplicationRecord
-  belongs_to :issue
-  belongs_to :item, optional: true
-
-  validates :description, presence: true
-  validates :quantity, numericality: { greater_than: 0 }
-  validates :unit_price, numericality: { greater_than_or_equal_to: 0 }
-  before_save :total
+class ItemSyncService < SyncServiceBase
 
   private
 
-  def total
-    log "Updating line total"
-    self.line_total = self.unit_price * self.quantity
+  # Specify the local model this service syncs
+  def self.model_class
+    Item
   end
 
-  def log(msg)
-    Rails.logger.info "[LineItem] #{msg}"
+  # Determine if the remote entity should be deleted locally (e.g. if it's marked inactive in QBO)
+  def destroy_remote?(remote)
+    !remote.active?
+  end
+
+  # Map relevant attributes from the QBO Employee to the local Employee model
+  def process_attributes(local, remote)
+    local.qbo_id  = remote.id
+    local.description = remote.description
+    local.unit_price = remote.unit_price
   end
 
 end

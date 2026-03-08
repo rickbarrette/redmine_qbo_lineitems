@@ -8,24 +8,15 @@
 #
 #THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-class LineItem < ApplicationRecord
-  belongs_to :issue
-  belongs_to :item, optional: true
+class ItemsController < ApplicationController
+  before_action :require_login
 
-  validates :description, presence: true
-  validates :quantity, numericality: { greater_than: 0 }
-  validates :unit_price, numericality: { greater_than_or_equal_to: 0 }
-  before_save :total
+  def autocomplete
+    term = params[:q].to_s
+    items = Item.where("description LIKE ?", "%#{term}%").order(:description).limit(20)
 
-  private
-
-  def total
-    log "Updating line total"
-    self.line_total = self.unit_price * self.quantity
+    render json: items.map { |i|
+      { id: i.id, text: i.description, price: i.unit_price }
+    }
   end
-
-  def log(msg)
-    Rails.logger.info "[LineItem] #{msg}"
-  end
-
 end

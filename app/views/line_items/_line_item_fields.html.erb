@@ -1,10 +1,13 @@
 <tr class="line-item">
   <%= f.hidden_field :id %>
   <%= f.hidden_field :_destroy %>
+  <%= f.hidden_field :item_id, class: "item-id-field" %>
 
   <td data-label="<%= t :label_description %>">
     <%= f.text_field :description,
           placeholder: l(:label_description),
+          class: "line-item-description",
+          autocomplete: "off",
           no_label: true,
           disabled: readonly %>
   </td>

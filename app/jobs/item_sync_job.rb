@@ -8,24 +8,29 @@
 #
 #THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-class LineItem < ApplicationRecord
-  belongs_to :issue
-  belongs_to :item, optional: true
+class ItemSyncJob < ApplicationJob
+  queue_as :default
+  retry_on StandardError, wait: 5.minutes, attempts: 5
 
-  validates :description, presence: true
-  validates :quantity, numericality: { greater_than: 0 }
-  validates :unit_price, numericality: { greater_than_or_equal_to: 0 }
-  before_save :total
+  # Performs a sync of items from QuickBooks Online.
+  def perform(full_sync: false, id: nil)
+    qbo = QboConnectionService.current!
+    raise "No QBO configuration found" unless qbo
+
+    log "Starting #{full_sync ? 'full' : 'incremental'} sync for item ##{id || 'all'}..."
+
+    service = ItemSyncService.new(qbo: qbo)
+
+    if id.present?
+      service.sync_by_id(id)
+    else
+      service.sync(full_sync: full_sync)
+    end
+  end
 
   private
 
-  def total
-    log "Updating line total"
-    self.line_total = self.unit_price * self.quantity
-  end
-
   def log(msg)
-    Rails.logger.info "[LineItem] #{msg}"
+    Rails.logger.info "[ItemSyncJob] #{msg}"
   end
-
 end

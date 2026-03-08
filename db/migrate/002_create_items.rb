@@ -8,24 +8,19 @@
 #
 #THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-class LineItem < ApplicationRecord
-  belongs_to :issue
-  belongs_to :item, optional: true
+class CreateItems < ActiveRecord::Migration[7.0]
+  def change
+    create_table :items do |t|
+      t.integer :qbo_id, null: false
+      t.text    :description, null: false
+      t.decimal :unit_price,
+                precision: 15,
+                scale: 4,
+                null: false,
+                default: 0
+      t.timestamps
+    end
 
-  validates :description, presence: true
-  validates :quantity, numericality: { greater_than: 0 }
-  validates :unit_price, numericality: { greater_than_or_equal_to: 0 }
-  before_save :total
-
-  private
-
-  def total
-    log "Updating line total"
-    self.line_total = self.unit_price * self.quantity
+    add_reference :line_items, :item, foreign_key: true
   end
-
-  def log(msg)
-    Rails.logger.info "[LineItem] #{msg}"
-  end
-
 end

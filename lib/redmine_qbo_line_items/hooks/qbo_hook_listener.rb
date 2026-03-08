@@ -8,24 +8,29 @@
 #
 #THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-class LineItem < ApplicationRecord
-  belongs_to :issue
-  belongs_to :item, optional: true
+module RedmineQboLineItems
+  module Hooks
 
-  validates :description, presence: true
-  validates :quantity, numericality: { greater_than: 0 }
-  validates :unit_price, numericality: { greater_than_or_equal_to: 0 }
-  before_save :total
+    class QboHookListener < Redmine::Hook::ViewListener
 
-  private
+      # Called by WebhookProcessJob
+      def qbo_additional_entities(context={})
+        log "Added QBO Item to allowed webook entities"
+        return "Item"
+      end
 
-  def total
-    log "Updating line total"
-    self.line_total = self.unit_price * self.quantity
+      # Called by the QboSyncDispatcher
+      def qbo_full_sync (context={})
+        log "Adding ItemSyncJob to QBO sync dispatcher"
+        return ItemSyncJob
+      end
+
+      private
+
+      def log(msg)
+        Rails.logger.info "[QboHookListener] #{msg}"
+      end
+
+    end
   end
-
-  def log(msg)
-    Rails.logger.info "[LineItem] #{msg}"
-  end
-
 end

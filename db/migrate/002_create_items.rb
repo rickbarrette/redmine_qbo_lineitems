@@ -17,6 +17,7 @@ class CreateItems < ActiveRecord::Migration[7.0]
                 scale: 4,
                 null: false,
                 default: 0
+      t.boolean :active, default: true, null: false
       t.timestamps
     end
 

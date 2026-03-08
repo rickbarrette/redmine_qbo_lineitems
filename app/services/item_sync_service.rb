@@ -17,16 +17,12 @@ class ItemSyncService < SyncServiceBase
     Item
   end
 
-  # Determine if the remote entity should be deleted locally (e.g. if it's marked inactive in QBO)
-  def destroy_remote?(remote)
-    !remote.active?
-  end
-
   # Map relevant attributes from the QBO Employee to the local Employee model
   def process_attributes(local, remote)
     local.id  = remote.id
     local.description = remote.description
     local.unit_price = remote.unit_price
+    local.active = remote.active?
   end
 
 end

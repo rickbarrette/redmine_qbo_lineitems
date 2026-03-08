@@ -13,7 +13,7 @@ class ItemsController < ApplicationController
 
   def autocomplete
     term = params[:q].to_s
-    items = Item.where("description LIKE ?", "%#{term}%").order(:description).limit(20)
+    items = Item.where("description LIKE ?", "%#{ActiveRecord::Base.sanitize_sql_like(term)}%").where(active: true).order(:description).limit(20)
 
     render json: items.map { |i|
       { id: i.id, text: i.description, price: i.unit_price }

@@ -10,6 +10,8 @@
 
 class ItemSyncService < SyncServiceBase
 
+  PAGE_SIZE = 10
+
   private
 
   # Specify the local model this service syncs

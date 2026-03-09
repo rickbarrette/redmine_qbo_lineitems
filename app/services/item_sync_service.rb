@@ -10,13 +10,16 @@
 
 class ItemSyncService < SyncServiceBase
 
-  PAGE_SIZE = 10
-
   private
 
   # Specify the local model this service syncs
   def self.model_class
     Item
+  end
+
+  # Specify a page size of 20, as the API only returns 20 items at a time.
+  def self.page_size
+    20
   end
 
   # Map relevant attributes from the QBO Employee to the local Employee model

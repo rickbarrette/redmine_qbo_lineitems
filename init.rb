@@ -18,6 +18,7 @@ Redmine::Plugin.register :redmine_qbo_lineitems do
   url 'https://github.com/rickbarrette/redmine_qbo'
   author_url 'https://barrettefabrication.com'
   requires_redmine version_or_higher: '6.1.0'
+  settings partial: 'line_items/settings'
 
   # Ensure redmine_qbo is installed
   begin
@@ -28,7 +29,6 @@ Redmine::Plugin.register :redmine_qbo_lineitems do
   
   # Add safe attributes for core models
   Issue.safe_attributes :line_items_attributes
-  
 end
 
 # Dynamically load all Hooks & Patches recursively

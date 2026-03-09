@@ -13,6 +13,7 @@
 en:
   label_description: "Description"
   label_item: "Item"
+  label_item_count: "Item Count:"
   label_line_items: "Line Items"
   label_price: "Unit Price"
   label_qty: "Quantity"

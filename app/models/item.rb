@@ -15,6 +15,12 @@ class Item < ApplicationRecord
   validates :unit_price, numericality: { greater_than_or_equal_to: 0 }
   self.primary_key = :id
 
+  # Returns the last sync time formatted for display. If no sync has occurred, returns a default message.
+  def self.last_sync
+    return I18n.t(:label_qbo_never_synced) unless maximum(:updated_at)
+    format_time(maximum(:updated_at))
+  end
+
   # Sync all items, typically triggered by a scheduled task or manual sync request
   def self.sync
     ItemSyncJob.perform_later(full_sync: true)

@@ -1,0 +1,5 @@
+<div>
+  <b><%=t(:label_item_count)%></b> <%= Item.count %> @ <%= Item.last_sync %>
+  <br/>
+  <%=t(:label_last_sync)%> </b> <%= Qbo.last_sync if Qbo.exists? %> 
+</div>

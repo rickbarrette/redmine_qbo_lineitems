@@ -23,9 +23,10 @@
   </td>
 
   <td data-label="<%= t :label_price %>">
-    <%= f.number_field :unit_price,
-          step: 0.01,
+    <%= f.text_field :unit_price,
           class: "price-field",
+          inputmode: "decimal",
+          autocomplete: "off",
           no_label: true,
           disabled: readonly %>
   </td>

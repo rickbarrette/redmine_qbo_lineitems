@@ -19,6 +19,7 @@ module RedmineQboLineItems
           javascript_include_tag( 'nested_form_controller', plugin: :redmine_qbo_lineitems),
           javascript_include_tag("line_items", plugin: :redmine_qbo_lineitems),
           javascript_include_tag("autocomplete", plugin: :redmine_qbo_lineitems),
+          javascript_include_tag("blur", plugin: :redmine_qbo_lineitems),
           stylesheet_link_tag("line_items", plugin: :redmine_qbo_lineitems)
         ])
       end

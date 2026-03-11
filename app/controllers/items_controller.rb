@@ -12,11 +12,19 @@ class ItemsController < ApplicationController
   before_action :require_login
 
   def autocomplete
-    term = params[:q].to_s
-    items = Item.where("description LIKE ?", "%#{ActiveRecord::Base.sanitize_sql_like(term)}%").where(active: true).order(:description).limit(20)
+    term = ActiveRecord::Base.sanitize_sql_like(params[:q].to_s)
 
+    items = Item.where("description LIKE :t OR name LIKE :t OR sku LIKE :t", t: "%#{term}%")
+      .where(active: true)
+      .order(:description)
+      .limit(20)
     render json: items.map { |i|
-      { id: i.id, text: i.description, price: i.unit_price }
+      { id: i.id, name: i.name, sku: i.sku, description: i.description, price: i.unit_price }
     }
+  end
+
+  def sync
+    Item.sync
+    redirect_to :home, flash: { notice: I18n.t(:label_syncing) }
   end
 end

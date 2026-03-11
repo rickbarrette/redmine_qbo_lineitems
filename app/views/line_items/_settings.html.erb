@@ -3,3 +3,4 @@
   <br/>
   <%=t(:label_last_sync)%> </b> <%= Qbo.last_sync if Qbo.exists? %> 
 </div>
+<%= link_to t(:label_sync_now), items_sync_path%>

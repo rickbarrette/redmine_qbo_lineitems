@@ -8,33 +8,9 @@
 #
 #THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-class ItemSyncService < SyncServiceBase
-
-  private
-
-  # Specify the local model this service syncs
-  def self.model_class
-    Item
+class UpdateItems < ActiveRecord::Migration[7.0]
+  def change
+    add_column :items, :name, :string, null: false
+    add_column :items, :sku, :string
   end
-
-  # Specify a page size of 20, as the API only returns 20 items at a time.
-  def self.page_size
-    20
-  end
-
-  # Map relevant attributes from the QBO Employee to the local Employee model
-  def process_attributes(local, remote)
-    log "Processing Item ##{remote.id}"
-    local.id  = remote.id
-    local.description = remote.description
-    local.unit_price = remote.unit_price
-    local.active = remote.active?
-    local.name = remote.name
-    local.sku = remote.sku
-  end
-
-  def log(msg)
-    Rails.logger.info "[ItemSyncService] #{msg}"
-  end
-
 end

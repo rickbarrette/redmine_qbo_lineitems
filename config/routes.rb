@@ -11,6 +11,6 @@
 resources :items do
   collection do
     get :autocomplete
-    post :sync
+    get :sync
   end
 end

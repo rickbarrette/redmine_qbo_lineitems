@@ -10,6 +10,7 @@
 
 class ItemsController < ApplicationController
   before_action :require_login
+  before_action :find_item, only: [:show, :edit, :update, :destroy]
 
   def autocomplete
     term = ActiveRecord::Base.sanitize_sql_like(params[:q].to_s)
@@ -18,13 +19,61 @@ class ItemsController < ApplicationController
       .where(active: true)
       .order(:description)
       .limit(20)
+
     render json: items.map { |i|
       { id: i.id, name: i.name, sku: i.sku, description: i.description, price: i.unit_price }
     }
   end
 
+  def create
+    @item = Item.new(item_params)
+
+    if @item.save
+      redirect_to item_path(@item), notice: l(:notice_successful_create)
+    else
+      render :new
+    end
+  end
+
+  def destroy
+    @item.destroy
+    redirect_to items_path, notice: l(:notice_successful_delete)
+  end
+
+  def edit
+  end
+
+   def index
+    @items = Item.order(:name)
+  end
+
+  def new
+    @item = Item.new
+  end
+
+  def show
+  end
+
   def sync
     Item.sync
     redirect_to :home, flash: { notice: I18n.t(:label_syncing) }
+  end
+
+  def update
+    if @item.update(item_params)
+      redirect_to item_path(@item), notice: l(:notice_successful_update)
+    else
+      render :edit
+    end
+  end
+
+  private
+
+  def find_item
+    @item = Item.find(params[:id])
+  end
+
+  def item_params
+    params.require(:item).permit(:name, :description, :sku, :unit_price, :active)
   end
 end

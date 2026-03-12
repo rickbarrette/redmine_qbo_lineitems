@@ -1,0 +1,37 @@
+<h2>Items</h2>
+
+<div class="contextual">
+  <%= link_to "New Item", new_item_path, class: "icon icon-add" %>
+</div>
+
+<table class="list items">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>SKU</th>
+      <th>Description</th>
+      <th>Price</th>
+      <th>Active</th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @items.each do |item| %>
+      <tr>
+        <td><%= link_to item.name, item_path(item) %></td>
+        <td><%= item.sku %></td>
+        <td><%= item.description %></td>
+        <td><%= number_to_currency(item.unit_price) %></td>
+        <td><%= item.active ? "Yes" : "No" %></td>
+        <td>
+          <%= link_to "Edit", edit_item_path(item), class: "icon icon-edit" %>
+          <%= link_to "Delete", item_path(item),
+                method: :delete,
+                data: { confirm: "Are you sure?" },
+                class: "icon icon-del" %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -1,0 +1,43 @@
+<%= form_with model: @item, local: true do |f| %>
+
+  <% if @item.errors.any? %>
+    <div id="errorExplanation">
+      <h2><%= pluralize(@item.errors.count, "error") %></h2>
+      <ul>
+        <% @item.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <p>
+    <%= f.label :name %><br>
+    <%= f.text_field :name, required: true %>
+  </p>
+
+  <p>
+    <%= f.label :sku %><br>
+    <%= f.text_field :sku %>
+  </p>
+
+  <p>
+    <%= f.label :description %><br>
+    <%= f.text_area :description, rows: 3 %>
+  </p>
+
+  <p>
+    <%= f.label :unit_price %><br>
+    <%= f.number_field :unit_price, step: 0.01 %>
+  </p>
+
+  <p>
+    <%= f.label :active %>
+    <%= f.check_box :active %>
+  </p>
+
+  <p>
+    <%= f.submit %>
+  </p>
+
+<% end %>

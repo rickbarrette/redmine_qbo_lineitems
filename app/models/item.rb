@@ -14,6 +14,7 @@ class Item < QboBaseModel
   validates_presence_of :id, :description
   validates :unit_price, numericality: { greater_than_or_equal_to: 0 }
   self.primary_key = :id
+  qbo_sync push: true
 
   # Updates Both local & remote DB description
   def description=(s)

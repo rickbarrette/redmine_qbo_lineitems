@@ -22,19 +22,7 @@ class ItemSyncService < SyncServiceBase
     20
   end
 
-  # Map relevant attributes from the QBO Employee to the local Employee model
-  def process_attributes(local, remote)
-    log "Processing Item ##{remote.id}"
-    local.id  = remote.id
-    local.description = remote.description
-    local.unit_price = remote.unit_price
-    local.active = remote.active?
-    local.name = remote.name
-    local.sku = remote.sku
-  end
-
-  def log(msg)
-    Rails.logger.info "[ItemSyncService] #{msg}"
-  end
-
+  map_attribute :active, :active?
+  map_attributes :description,, :id, :name, :sku, :unit_price
+  
 end

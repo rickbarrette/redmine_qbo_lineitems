@@ -12,6 +12,7 @@ class ItemsController < ApplicationController
   before_action :require_login
   before_action :find_item, only: [:show, :edit, :update, :destroy]
 
+  # Used for autocomplete form
   def autocomplete
     term = ActiveRecord::Base.sanitize_sql_like(params[:q].to_s)
 
@@ -43,7 +44,7 @@ class ItemsController < ApplicationController
   def edit
   end
 
-   def index
+  def index
     @items = Item.order(:name)
   end
 

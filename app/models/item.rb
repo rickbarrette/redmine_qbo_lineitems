@@ -18,29 +18,25 @@ class Item < QboBaseModel
 
   # Updates Both local & remote DB description
   def description=(s)
-    details
-    @details.description = s
+    details.description = s
     super
   end
 
   # Updates Both local & remote DB name 
   def name=(s)
-    details
-    @details.name = s
+    details.name = s
     super
   end
   
   # Updates Both local & remote DB sku
   def sku=(s)
-    details
-    @details.sku = s
+    details.sku = s
     super
   end
 
    # Updates Both local & remote DB price
   def unit_price=(s)
-    details
-    @details.unit_price = s
+    details.unit_price = s
     super
   end
 

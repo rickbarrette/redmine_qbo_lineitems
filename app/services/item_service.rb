@@ -28,12 +28,7 @@ class ItemService < ServiceBase
 
   def default_income_account
     log "Looking up sales income account"
-    qbo = QboConnectionService.current!
-    qbo.perform_authenticated_request do |token|
-      service = Quickbooks::Service::Account.new(
-        company_id: qbo.realm_id,
-        access_token: token
-      )
+    QboConnectionService.with_qbo_service(entity: Invoice) do |service|
       service.query("SELECT * FROM Account WHERE AccountType='Income' AND Name LIKE '%Sales%'").first
     end
   end

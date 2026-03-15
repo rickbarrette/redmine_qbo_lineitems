@@ -21,8 +21,8 @@ module RedmineQboLineItems
 
       # Called by the QboSyncDispatcher
       def qbo_full_sync (context={})
-        log "Adding ItemSyncJob to QBO sync dispatcher"
-        return ItemSyncJob
+        log "Adding Item to QBO sync dispatcher"
+        return Item
       end
 
       private

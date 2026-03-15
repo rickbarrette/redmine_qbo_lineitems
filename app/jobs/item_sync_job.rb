@@ -14,13 +14,8 @@ class ItemSyncJob < ApplicationJob
 
   # Performs a sync of items from QuickBooks Online.
   def perform(full_sync: false, id: nil)
-    qbo = QboConnectionService.current!
-    raise "No QBO configuration found" unless qbo
-
     log "Starting #{full_sync ? 'full' : 'incremental'} sync for item ##{id || 'all'}..."
-
-    service = ItemSyncService.new(qbo: qbo)
-
+    service = ItemSyncService.new
     if id.present?
       service.sync_by_id(id)
     else

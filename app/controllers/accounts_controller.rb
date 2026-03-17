@@ -8,15 +8,15 @@
 #
 #THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-resources :items do
-  collection do
-    get :autocomplete
-    get :sync
+class AccountsController < ApplicationController
+  
+  def index
+    @accounts = Account.where(classification: 'Revenue').order(:name)
   end
-end
 
-resources :accounts do
-  collection do
-    patch :set_default
+  def set_default
+    account = Account.find(params[:default_account_id])
+    account.update(default: true)
+    redirect_to accounts_path, notice: "Default account updated."
   end
 end

@@ -23,6 +23,6 @@ class ItemSyncService < SyncServiceBase
   end
 
   map_attribute :active, :active?
-  map_attributes :description, :id, :name, :sku, :unit_price
+  map_attributes :description, :id, :name, :sku, :type, :unit_price
   
 end

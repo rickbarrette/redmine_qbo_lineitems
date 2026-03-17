@@ -16,13 +16,13 @@ module RedmineQboLineItems
       # Called by WebhookProcessJob
       def qbo_additional_entities(context={})
         log "Added QBO Item to allowed webook entities"
-        return "Item"
+        return ["Item", "Account"]
       end
 
       # Called by the QboSyncDispatcher
       def qbo_full_sync (context={})
         log "Adding Item to QBO sync dispatcher"
-        return Item
+        return [Item, Account]
       end
 
       private

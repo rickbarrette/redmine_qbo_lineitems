@@ -1,8 +1,8 @@
 <%= form_with model: @item, local: true do |f| %>
 
   <% if @item.errors.any? %>
-    <div id="errorExplanation">
-      <h2><%= pluralize(@item.errors.count, "error") %></h2>
+    <div id="errorExplanation" style="border: 1px solid #f00; padding: 10px; background-color: #fee; margin-bottom: 1em;">
+      <h2 style="color: #900;"><%= pluralize(@item.errors.count, "error") %> prohibited this item from being saved:</h2>
       <ul>
         <% @item.errors.full_messages.each do |msg| %>
           <li><%= msg %></li>
@@ -11,33 +11,59 @@
     </div>
   <% end %>
 
-  <p>
-    <%= f.label :name %><br>
-    <%= f.text_field :name, required: true %>
-  </p>
+  <table style="width: 100%; border-collapse: collapse;">
+    <tbody>
+      <tr>
+        <td style="padding: 8px; vertical-align: top;"><%= f.label :name %></td>
+        <td style="padding: 8px;"><%= f.text_field :name, required: true, style: "width: 100%;" %></td>
+      </tr>
 
-  <p>
-    <%= f.label :sku %><br>
-    <%= f.text_field :sku %>
-  </p>
+      <tr>
+        <td style="padding: 8px; vertical-align: top;"><%= f.label :sku %></td>
+        <td style="padding: 8px;"><%= f.text_field :sku, style: "width: 100%;" %></td>
+      </tr>
 
-  <p>
-    <%= f.label :description %><br>
-    <%= f.text_area :description, rows: 3 %>
-  </p>
+      <tr>
+        <td style="padding: 8px; vertical-align: top;"><%= f.label :description %></td>
+        <td style="padding: 8px;"><%= f.text_area :description, rows: 3, style: "width: 100%;" %></td>
+      </tr>
 
-  <p>
-    <%= f.label :unit_price %><br>
-    <%= f.number_field :unit_price, step: 0.01 %>
-  </p>
+      <tr>
+        <td style="padding: 8px; vertical-align: top;"><%= f.label :unit_price %></td>
+        <td style="padding: 8px;"><%= f.number_field :unit_price, step: 0.01, style: "width: 100%;" %></td>
+      </tr>
 
-  <p>
-    <%= f.label :active %>
-    <%= f.check_box :active %>
-  </p>
+      <tr>
+        <td style="padding: 8px; vertical-align: top;"><%= f.label :account %></td>
+        <td style="padding: 8px;">
+          <%= f.collection_select :account_id,
+                Account.where(classification: 'Revenue').order(:name),
+                :id,
+                :name,
+                { selected: @item.account_id || Account.get_default&.id },
+                { include_blank: true, style: "width: 100%;" } %>
+        </td>
+      </tr>
 
-  <p>
-    <%= f.submit %>
+      <tr>
+        <td style="padding: 8px; vertical-align: top;"><%= f.label :type %></td>
+        <td style="padding: 8px;">
+          <%= f.select :type,
+                Quickbooks::Model::Item::ITEM_TYPES.map { |t| [t, t] },
+                { selected: @item.type || Quickbooks::Model::Item::NON_INVENTORY_TYPE },
+                { style: "width: 100%;" } %>
+        </td>
+      </tr>
+
+      <tr>
+        <td style="padding: 8px; vertical-align: middle;"><%= f.label :active %></td>
+        <td style="padding: 8px; vertical-align: middle;"><%= f.check_box :active %></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p style="text-align: right; margin-top: 1em;">
+    <%= f.submit "Save Item", style: "padding: 6px 12px; font-weight: bold;" %>
   </p>
 
 <% end %>

@@ -8,15 +8,30 @@
 #
 #THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-resources :items do
-  collection do
-    get :autocomplete
-    get :sync
-  end
-end
+class Account < QboBaseModel
+  has_many :items
+  validates_presence_of :id, :name
+  self.primary_key = :id
+  qbo_sync push: false
+  before_save :clear_other_defaults, if: :default?
 
-resources :accounts do
-  collection do
-    patch :set_default
+  # Returns the account marked as default
+  def self.get_default
+    find_by(default: true)
   end
+
+  # Returns QBO Refrence object for the account
+  def ref
+    r = Quickbooks::Model::BaseReference.new
+    r.value = id
+    r.name = name
+    return r
+  end
+
+  private
+
+  def clear_other_defaults
+    Account.where.not(id: id).update_all(default: false)
+  end
+
 end

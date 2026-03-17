@@ -10,11 +10,19 @@
 
 class Item < QboBaseModel
   belongs_to :issue
-
+  belongs_to :account
+  
   validates_presence_of :id, :description
   validates :unit_price, numericality: { greater_than_or_equal_to: 0 }
   self.primary_key = :id
+  self.inheritance_column = :_type_disabled
   qbo_sync push: true
+
+  # Updates Both local & remote DB account ref
+  def account_id=(id)
+    details.income_account_ref = Account.find(id).ref
+    super
+  end
 
   # Updates Both local & remote DB description
   def description=(s)
@@ -31,6 +39,12 @@ class Item < QboBaseModel
   # Updates Both local & remote DB sku
   def sku=(s)
     details.sku = s
+    super
+  end
+
+  # Updates Both local & remote DB type
+  def type=(s)
+    details.type = s.to_s
     super
   end
 

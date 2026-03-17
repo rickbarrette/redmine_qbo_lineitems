@@ -8,15 +8,18 @@
 #
 #THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-resources :items do
-  collection do
-    get :autocomplete
-    get :sync
-  end
-end
+class CreateAccounts < ActiveRecord::Migration[7.0]
+  def change
+    create_table :accounts do |t|
+      t.text    :name, null: false
+      t.text    :description
+      t.boolean :active, default: true, null: false
+      t.boolean :default, default: false, null: false
+      t.text    :classification
+      t.timestamps
+    end
 
-resources :accounts do
-  collection do
-    patch :set_default
+    add_reference :items, :account, foreign_key: true
+    add_column :items, :type, :string
   end
 end

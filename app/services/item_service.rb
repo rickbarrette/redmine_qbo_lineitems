@@ -14,23 +14,7 @@ class ItemService < ServiceBase
 
   def build_qbo_remote
     log "Building new QBO Item"
-    account = default_income_account
-    log "Account: #{account.id} - #{account.name}"
-    income = Quickbooks::Model::BaseReference.new
-    income.value = account.id
-    income.name  = account.name
-
-    Quickbooks::Model::Item.new(
-      type: Quickbooks::Model::Item::NON_INVENTORY_TYPE,
-      income_account_ref: income
-    )
-  end
-
-  def default_income_account
-    log "Looking up sales income account"
-    QboConnectionService.with_qbo_service(entity: Invoice) do |service|
-      service.query("SELECT * FROM Account WHERE AccountType='Income' AND Name LIKE '%Sales%'").first
-    end
+    Quickbooks::Model::Item.new(type: Account.get_default&.ref)
   end
 
 end

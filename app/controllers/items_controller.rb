@@ -33,6 +33,19 @@ class ItemsController < ApplicationController
     else
       render :new
     end
+  rescue => e
+    log "Unexpected error creating item: #{e.message}"
+
+    # Regex now matches across line breaks
+    existing_id = e.message[/Duplicate Name Exists Error:[\s\S]*Id=(\d+)/, 1]&.to_i
+
+    if existing_id
+      flash[:error] = "Name already exists. Redirecting to existing item."
+      redirect_to item_path(existing_id)
+    else
+      flash[:error] = e.message
+      redirect_to new_item_path
+    end
   end
 
   def destroy
@@ -41,6 +54,10 @@ class ItemsController < ApplicationController
   end
 
   def edit
+  rescue => e
+    log "Failed to edit item"
+    flash[:error] = e.message
+    render_404
   end
 
    def index
@@ -71,9 +88,20 @@ class ItemsController < ApplicationController
 
   def find_item
     @item = Item.find(params[:id])
+  rescue => e
+    log "Failed to find item"
+    flash[:error] = e.message
+    render_404
   end
 
   def item_params
-    params.require(:item).permit(:name, :description, :sku, :unit_price, :active)
+    params.require(:item).permit(:name, :description, :sku, :unit_price, :active, :account_id, :type)
   end
+
+  private 
+
+  def log(msg)
+    Rails.logger.info "[ItemsController] #{msg}"
+  end
+
 end

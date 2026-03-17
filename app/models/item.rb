@@ -18,6 +18,7 @@ class Item < QboBaseModel
   self.inheritance_column = :_type_disabled
   qbo_sync push: true
   after_initialize :set_defaults, if: :new_record?
+  before_destroy :make_inactive
 
   # Updates Both local & remote DB account ref
   def account_id=(id)
@@ -35,6 +36,11 @@ class Item < QboBaseModel
   def name=(s)
     details.name = s
     super
+  end
+
+  def make_inactive
+    details.active = false
+    push_to_qbo
   end
 
   def ref

@@ -45,7 +45,7 @@ class BillLineItemsJob < ActiveJob::Base
     log "Creating Estimate records in QBO for #{issue.customer.name} from issue ##{issue.id}"
     
     estimate = Quickbooks::Model::Estimate.new(customer_id: issue.customer.id)
-    estimate_service = Quickbooks::Service::Estimate.new( company_id: qbo.realm_id,  access_token: access_token)
+    estimate_service = Quickbooks::Service::Estimate.new( company_id: qbo.realm_id, access_token: access_token)
     memo = "Added from: #{issue.tracker} ##{issue.id}: #{issue.subject}"
     estimate.private_note = memo
     estimate.line_items << Quickbooks::Model::InvoiceLineItem.new(description: memo, detail_type: 'DescriptionOnly' )
@@ -58,7 +58,7 @@ class BillLineItemsJob < ActiveJob::Base
       line.sales_item! do |detail|
         detail.unit_price = item.unit_price
         detail.quantity = item.quantity
-        detail.tax_code_ref = Quickbooks::Model::BaseReference.new("TAX")
+        detail.tax_code_ref = Quickbooks::Model::BaseReference.new("TAX") item.item.nil? || item.item.taxable
       end
 
       estimate.line_items << line

@@ -1,6 +1,39 @@
-<div>
-  <b><%=t(:label_item_count)%></b> <%= Item.count %> @ <%= Item.last_sync %>
-  <br/>
-  <%=t(:label_last_sync)%> </b> <%= Qbo.last_sync if Qbo.exists? %> 
+<div class="box tabular">
+  <p>
+    <label><strong><%= t(:label_item_count) %></strong></label>
+    <%= Item.count %> 
+    <em style="color: #777; font-size: 0.9em; margin-left: 8px;">
+      (@ <%= Item.last_sync %>)
+    </em>
+  </p>
+  <p>
+    <label><strong><%= t(:label_account_count) %></strong></label>
+    <%= Account.count %> 
+    <em style="color: #777; font-size: 0.9em; margin-left: 8px;">
+      (@ <%= Account.last_sync %>)
+    </em>
+  </p>
+  <p>
+    <label><strong><%= t(:label_last_sync) %> (QBO)</strong></label>
+    <%= Qbo.exists? ? Qbo.last_sync : 'Never synced' %>
+  </p>
+  <p>
+    <label><strong><%= t(:label_default_account) %></strong></label>
+    <%= Account.get_default %>
+  </p>
 </div>
-<%= link_to t(:label_sync_now), sync_items_path %>
+
+<fieldset class="box">
+  <legend>Management & Synchronization</legend>
+  
+  <div style="margin-bottom: 15px;">
+    <%= link_to t(:label_sync_now_items), sync_items_path, class: 'button icon icon-reload' %>
+    <%= link_to t(:label_sync_now_accounts), sync_accounts_path, class: 'button icon icon-reload' %>
+  </div>
+
+  <div>
+    <%= link_to t(:label_items), items_path, class: 'icon icon-list' %>
+    <span style="margin: 0 10px; color: #ccc;">|</span>
+    <%= link_to t(:label_accounts), accounts_path, class: 'icon icon-list' %>
+  </div>
+</fieldset>

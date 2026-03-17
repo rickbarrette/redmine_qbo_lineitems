@@ -18,5 +18,6 @@ end
 resources :accounts do
   collection do
     patch :set_default
+    get :sync
   end
 end

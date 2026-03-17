@@ -19,4 +19,9 @@ class AccountsController < ApplicationController
     account.update(default: true)
     redirect_to accounts_path, notice: "Default account updated."
   end
+
+  def sync
+    Account.sync
+    redirect_to :home, flash: { notice: I18n.t(:label_syncing) }
+  end
 end

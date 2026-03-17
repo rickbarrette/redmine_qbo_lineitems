@@ -28,6 +28,10 @@ class Account < QboBaseModel
     return r
   end
 
+  def to_s
+    name
+  end
+
   private
 
   def clear_other_defaults

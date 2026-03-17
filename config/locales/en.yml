@@ -11,13 +11,26 @@
 # English strings go here for Rails i18n
 # Usage I18n.t(:label)
 en:
+  field_classification: "Classification"
+  field_sku: "SKU"
+  field_taxable: "Taxable"
+  field_unit_price: "Unit Price"
+
+  label_account: "Account"
+  label_accounts: "Accounts"
+  label_account_count: "Number of Accounts:"
+  label_default_account: "Default Item Income Account"
   label_description: "Description"
   label_item: "Item"
   label_item_count: "Item Count:"
+  label_items: "Items"
   label_line_items: "Line Items"
   label_price: "Unit Price"
   label_qty: "Quantity"
   label_remove: "Remove"
+  label_sync_now_accounts: "Sync Accounts"
+  label_sync_now_items: "Sync Items"
   label_total: "Total"
+
   notice_added_from: "Added from issue #"
   

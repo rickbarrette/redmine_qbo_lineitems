@@ -1,76 +1,47 @@
-<%= form_with model: @item, local: true do |f| %>
+<%= labelled_form_for @item do |f| %>
+  <%= error_messages_for 'item' %>
 
-  <% if @item.errors.any? %>
-    <div id="errorExplanation" style="border: 1px solid #f00; padding: 10px; background-color: #fee; margin-bottom: 1em;">
-      <h2 style="color: #900;"><%= pluralize(@item.errors.count, "error") %> prohibited this item from being saved:</h2>
-      <ul>
-        <% @item.errors.full_messages.each do |msg| %>
-          <li><%= msg %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+  <div class="box tabular">
+    <p>
+      <%= f.text_field :name, required: true, size: 60 %>
+    </p>
 
-  <table style="width: 100%; border-collapse: collapse;">
-    <tbody>
-      <tr>
-        <td style="padding: 8px; vertical-align: top;"><%= f.label :name %></td>
-        <td style="padding: 8px;"><%= f.text_field :name, required: true, style: "width: 100%;" %></td>
-      </tr>
+    <p>
+      <%= f.text_field :sku, size: 30 %>
+    </p>
 
-      <tr>
-        <td style="padding: 8px; vertical-align: top;"><%= f.label :sku %></td>
-        <td style="padding: 8px;"><%= f.text_field :sku, style: "width: 100%;" %></td>
-      </tr>
+    <p>
+      <%= f.text_area :description, rows: 4, class: 'wiki-edit' %>
+    </p>
 
-      <tr>
-        <td style="padding: 8px; vertical-align: top;"><%= f.label :description %></td>
-        <td style="padding: 8px;"><%= f.text_area :description, rows: 3, style: "width: 100%;" %></td>
-      </tr>
+    <p>
+      <%= f.number_field :unit_price, step: 0.01, size: 10 %>
+    </p>
 
-      <tr>
-        <td style="padding: 8px; vertical-align: top;"><%= f.label :unit_price %></td>
-        <td style="padding: 8px;"><%= f.number_field :unit_price, step: 0.01, style: "width: 100%;" %></td>
-      </tr>
+    <p>
+      <%= f.check_box :taxable %>
+    </p>
 
-      <tr>
-        <td style="padding: 8px; vertical-align: middle;"><%= f.label :taxable %></td>
-        <td style="padding: 8px; vertical-align: middle;">
-          <%= f.check_box :taxable %>
-        </td>
-      </tr>
+    <p>
+      <%= f.label :account_id, l(:label_account) %>
+      <%= f.collection_select :account_id,
+            Account.where(classification: 'Revenue').order(:name),
+            :id,
+            :name,
+            { selected: @item.account_id || Account.get_default&.id, include_blank: true } %>
+    </p>
 
-      <tr>
-        <td style="padding: 8px; vertical-align: top;"><%= f.label :account %></td>
-        <td style="padding: 8px;">
-          <%= f.collection_select :account_id,
-                Account.where(classification: 'Revenue').order(:name),
-                :id,
-                :name,
-                { selected: @item.account_id || Account.get_default&.id },
-                { include_blank: true, style: "width: 100%;" } %>
-        </td>
-      </tr>
+    <p>
+      <%= f.select :type,
+            Quickbooks::Model::Item::ITEM_TYPES.map { |t| [t, t] },
+            { selected: @item.type || Quickbooks::Model::Item::NON_INVENTORY_TYPE } %>
+    </p>
 
-      <tr>
-        <td style="padding: 8px; vertical-align: top;"><%= f.label :type %></td>
-        <td style="padding: 8px;">
-          <%= f.select :type,
-                Quickbooks::Model::Item::ITEM_TYPES.map { |t| [t, t] },
-                { selected: @item.type || Quickbooks::Model::Item::NON_INVENTORY_TYPE },
-                { style: "width: 100%;" } %>
-        </td>
-      </tr>
+    <p>
+      <%= f.check_box :active %>
+    </p>
+  </div>
 
-      <tr>
-        <td style="padding: 8px; vertical-align: middle;"><%= f.label :active %></td>
-        <td style="padding: 8px; vertical-align: middle;"><%= f.check_box :active %></td>
-      </tr>
-    </tbody>
-  </table>
-
-  <p style="text-align: right; margin-top: 1em;">
-    <%= f.submit "Save Item", style: "padding: 6px 12px; font-weight: bold;" %>
-  </p>
-
+  <%= submit_tag l(:button_save) %>
+  <%= link_to l(:button_cancel), items_path if controller.action_name == 'edit' %>
 <% end %>

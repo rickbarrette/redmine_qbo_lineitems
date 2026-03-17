@@ -1,39 +1,37 @@
-<h1>Accounts</h1>
+<h2><%= l(:label_accounts) %></h2>
 
-<%= form_with url: set_default_accounts_path, method: :patch, local: true do %>
-  <table style="width:100%; border-collapse: collapse; margin-bottom: 1em;">
-    <thead style="background-color: #f2f2f2;">
-      <tr>
-        <th style="padding: 8px; border: 1px solid #ddd;">Default</th>
-        <th style="padding: 8px; border: 1px solid #ddd;">Name</th>
-        <th style="padding: 8px; border: 1px solid #ddd;">Description</th>
-        <th style="padding: 8px; border: 1px solid #ddd;">Classification</th>
-        <th style="padding: 8px; border: 1px solid #ddd;">Active</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <% @accounts.each_with_index do |account, index| %>
-        <tr style="background-color: <%= index.even? ? '#ffffff' : '#f9f9f9' %>;">
-          <td style="text-align: center; border: 1px solid #ddd; padding: 8px;">
-            <%= radio_button_tag "default_account_id", account.id, account.default %>
-          </td>
-          <td style="border: 1px solid #ddd; padding: 8px;"><%= account.name %></td>
-          <td style="border: 1px solid #ddd; padding: 8px;"><%= account.description %></td>
-          <td style="border: 1px solid #ddd; padding: 8px;"><%= account.classification %></td>
-          <td style="text-align: center; border: 1px solid #ddd; padding: 8px;">
-            <%= account.active ? "Yes" : "No" %>
-          </td>
+<%= form_tag set_default_accounts_path, method: :patch do %>
+  <div class="autoscroll">
+    <table class="list accounts">
+      <thead>
+        <tr>
+          <th style="width:50px;"><%= l(:label_default) %></th>
+          <th><%= l(:field_name) %></th>
+          <th><%= l(:field_description) %></th>
+          <th><%= l(:field_classification) %></th>
+          <th class="center"><%= l(:field_active) %></th>
         </tr>
-      <% end %>
-    </tbody>
+      </thead>
 
-    <tfoot>
-      <tr>
-        <td colspan="5" style="padding: 8px; text-align: right;">
-          <%= submit_tag "Save Default Account", style: "padding: 6px 12px; font-weight: bold;" %>
-        </td>
-      </tr>
-    </tfoot>
-  </table>
+      <tbody>
+        <% @accounts.each do |account| %>
+          <tr class="<%= cycle("odd", "even") %>">
+            <td class="center">
+              <%= radio_button_tag "default_account_id", account.id, account.default %>
+            </td>
+            <td class="name"><strong><%= account.name %></strong></td>
+            <td class="description"><%= truncate(account.description, length: 80) %></td>
+            <td class="classification"><%= account.classification %></td>
+            <td class="active center">
+              <%= checked_image account.active %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="buttons">
+    <%= submit_tag l(:button_save), class: 'button-small' %>
+  </p>
 <% end %>

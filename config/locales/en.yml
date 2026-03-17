@@ -26,6 +26,7 @@ en:
   label_items: "Items"
   label_line_items: "Line Items"
   label_price: "Unit Price"
+  label_item_new: "New Item"
   label_qty: "Quantity"
   label_remove: "Remove"
   label_sync_now_accounts: "Sync Accounts"

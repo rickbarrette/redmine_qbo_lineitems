@@ -58,7 +58,10 @@ class BillLineItemsJob < ActiveJob::Base
       line.sales_item! do |detail|
         detail.unit_price = item.unit_price
         detail.quantity = item.quantity
-        detail.tax_code_ref = Quickbooks::Model::BaseReference.new("TAX") item.item.nil? || item.item.taxable
+        # Assign "TAX" only if the item is taxable or unknown
+        if item.item.nil? || item.item.taxable
+          detail.tax_code_ref = Quickbooks::Model::BaseReference.new("TAX")
+        end
       end
 
       estimate.line_items << line
@@ -67,8 +70,6 @@ class BillLineItemsJob < ActiveJob::Base
     e = estimate_service.create(estimate)
     log "Created estimate ##{e.doc_number}"
   end
-
-  private
 
   def log(msg)
     Rails.logger.info "[BillLineItemsJob] #{msg}"

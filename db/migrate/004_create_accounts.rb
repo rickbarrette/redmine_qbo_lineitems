@@ -21,5 +21,6 @@ class CreateAccounts < ActiveRecord::Migration[7.0]
 
     add_reference :items, :account, foreign_key: true
     add_column :items, :type, :string
+    add_column :items, :taxable, :boolean, null: true
   end
 end

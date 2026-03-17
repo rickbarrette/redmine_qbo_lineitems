@@ -23,6 +23,7 @@ class ItemSyncService < SyncServiceBase
   end
 
   map_attribute :active, :active?
+  map_attribute :taxable, :taxable?
   map_attributes :description, :id, :name, :sku, :type, :unit_price
   
 end

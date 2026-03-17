@@ -17,6 +17,7 @@ class Item < QboBaseModel
   self.primary_key = :id
   self.inheritance_column = :_type_disabled
   qbo_sync push: true
+  after_initialize :set_defaults, if: :new_record?
 
   # Updates Both local & remote DB account ref
   def account_id=(id)
@@ -35,7 +36,15 @@ class Item < QboBaseModel
     details.name = s
     super
   end
+
+  def ref
+    Quickbooks::Model::BaseReference.new
+  end
   
+  def set_defaults
+    self.taxable = true if taxable.nil?
+  end
+
   # Updates Both local & remote DB sku
   def sku=(s)
     details.sku = s

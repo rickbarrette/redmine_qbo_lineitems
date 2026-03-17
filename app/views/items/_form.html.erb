@@ -34,6 +34,13 @@
       </tr>
 
       <tr>
+        <td style="padding: 8px; vertical-align: middle;"><%= f.label :taxable %></td>
+        <td style="padding: 8px; vertical-align: middle;">
+          <%= f.check_box :taxable %>
+        </td>
+      </tr>
+
+      <tr>
         <td style="padding: 8px; vertical-align: top;"><%= f.label :account %></td>
         <td style="padding: 8px;">
           <%= f.collection_select :account_id,

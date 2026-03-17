@@ -66,6 +66,7 @@ class ItemsController < ApplicationController
 
   def new
     @item = Item.new
+    @item.taxable.nil? ? true : @item.taxable
   end
 
   def show
@@ -95,7 +96,7 @@ class ItemsController < ApplicationController
   end
 
   def item_params
-    params.require(:item).permit(:name, :description, :sku, :unit_price, :active, :account_id, :type)
+    params.require(:item).permit(:name, :description, :sku, :unit_price, :active, :account_id, :type, :taxable)
   end
 
   private 

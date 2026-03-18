@@ -8,15 +8,15 @@
 <div class="issue details"> <div class="attributes">
     <div class="splitcontent">
       <div class="splitcontentleft">
-        <p><strong>SKU:</strong> <%= @item.sku.presence || "-" %></p>
-        <p><strong>Type:</strong> <%= @item.type.presence || "-" %></p>
-        <p><strong>Unit Price:</strong> <%= number_to_currency(@item.unit_price) %></p>
+        <p><strong><%=t(:field_sku)%>:</strong> <%= @item.sku.presence || "-" %></p>
+        <p><strong><%=t(:label_type)%>:</strong> <%= @item.type.presence || "-" %></p>
+        <p><strong><%=t(:field_unit_price)%>:</strong> <%= number_to_currency(@item.unit_price) %></p>
       </div>
 
       <div class="splitcontentleft">
-        <p><strong>Account:</strong> <%= @item.account&.name || "-" %></p>
+        <p><strong><%=t(:label_account)%>:</strong> <%= @item.account&.name || "-" %></p>
         <p>
-          <strong>Taxable:</strong> 
+          <strong><%=t(:field_taxable)%>:</strong> 
           <% if @item.taxable %>
             <span class="icon icon-ok" style="color: green;"><%=t(:yes)%></span>
           <% else %>
@@ -24,7 +24,7 @@
           <% end %>
         </p>
         <p>
-          <strong>Active:</strong> 
+          <strong><%=t(:label_active)%>:</strong> 
           <% if @item.active %>
             <span class="icon icon-ok" style="color: green;"><%=t(:yes)%></span>
           <% else %>
@@ -36,7 +36,7 @@
 
     <hr />
     
-    <p><strong>Description:</strong></p>
+    <p><strong><%=t(:label_description)%>:</strong></p>
     <div class="wiki" style="padding-left: 20px;">
       <%= @item.description.presence || "<em>No description provided</em>".html_safe %>
     </div>

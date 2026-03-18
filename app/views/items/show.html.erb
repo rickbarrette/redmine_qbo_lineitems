@@ -18,17 +18,17 @@
         <p>
           <strong>Taxable:</strong> 
           <% if @item.taxable %>
-            <span class="icon icon-ok" style="color: green;">Yes</span>
+            <span class="icon icon-ok" style="color: green;"><%=t(:yes)%></span>
           <% else %>
-            <span class="icon icon-not-ok" style="color: #999;">No</span>
+            <span class="icon icon-not-ok" style="color: #999;"><%=t(:no)%></span>
           <% end %>
         </p>
         <p>
           <strong>Active:</strong> 
           <% if @item.active %>
-            <span class="icon icon-ok" style="color: green;">Yes</span>
+            <span class="icon icon-ok" style="color: green;"><%=t(:yes)%></span>
           <% else %>
-            <span class="icon icon-not-ok" style="color: #999;">No</span>
+            <span class="icon icon-not-ok" style="color: #999;"><%=t(:no)%></span>
           <% end %>
         </p>
       </div>

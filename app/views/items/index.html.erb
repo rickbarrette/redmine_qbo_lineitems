@@ -26,10 +26,18 @@
             <td class="description"><%= truncate(item.description, length: 60) %></td>
             <td class="unit_price"><%= number_to_currency(item.unit_price) %></td>
             <td class="taxable center">
-              <%= item.taxable ? content_tag(:span, '', class: 'icon icon-ok') : "" %>
+              <% if item.taxable %>
+                <span class="icon icon-ok" style="color: green;"><%=t(:yes)%></span>
+              <% else %>
+                <span class="icon icon-not-ok" style="color: #999;"><%=t(:no)%></span>
+              <% end %>
             </td>
             <td class="active center">
-              <%= checked_image item.active %>
+              <% if item.active %>
+                <span class="icon icon-ok" style="color: green;"><%=t(:yes)%></span>
+              <% else %>
+                <span class="icon icon-not-ok" style="color: #999;"><%=t(:no)%></span>
+              <% end %>
             </td>
             <td class="buttons">
               <%= link_to l(:button_edit), edit_item_path(item), class: 'icon icon-edit' %>

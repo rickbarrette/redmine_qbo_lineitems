@@ -27,11 +27,13 @@ en:
   label_line_items: "Line Items"
   label_price: "Unit Price"
   label_item_new: "New Item"
+  label_no: "No"
   label_qty: "Quantity"
   label_remove: "Remove"
   label_sync_now_accounts: "Sync Accounts"
   label_sync_now_items: "Sync Items"
   label_total: "Total"
+  label_yes: "Yes"
 
   notice_added_from: "Added from issue #"
   

@@ -24,6 +24,9 @@ class ItemSyncService < SyncServiceBase
 
   map_attribute :active, :active?
   map_attribute :taxable, :taxable?
+  map_attribute :account do |remote|
+    Account.find remote.income_account_ref.value.to_i
+  end
   map_attributes :description, :id, :name, :sku, :type, :unit_price
-  
+
 end

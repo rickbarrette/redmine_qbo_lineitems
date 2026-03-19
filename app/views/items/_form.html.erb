@@ -15,7 +15,10 @@
     </p>
 
     <p>
-      <%= f.number_field :unit_price, step: 0.01, size: 10 %>
+      <%= f.text_field :unit_price,
+          class: "price-field",
+          inputmode: "decimal",
+          autocomplete: "off"%>
     </p>
 
     <p>

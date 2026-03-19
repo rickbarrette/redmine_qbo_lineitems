@@ -87,9 +87,10 @@ Before using this plugin:
 1.  Install and configure the parent plugin.
     
 2.  Ensure your **QuickBooks Online** company file is connected.
-    
-3.  Verify that the products or services referenced in line items exist in QuickBooks.
-    
+
+3.  Sync Accounts & Items via plugin settings
+
+4.  Set default income account for new items via plugin settings
 
 ---
 

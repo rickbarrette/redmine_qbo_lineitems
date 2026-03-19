@@ -31,6 +31,14 @@ Redmine::Plugin.register :redmine_qbo_lineitems do
   Issue.safe_attributes :line_items_attributes
 end
 
+# Administration menu extension
+Redmine::MenuManager.map :admin_menu do |menu|
+  menu.push :redmine_qbo_lineitems, { controller: 'items', action: 'index' },
+            icon: 'list',
+            caption: :label_items,
+            html: { class: 'icon icon-list' }
+end
+
 # Dynamically load all Hooks & Patches recursively
 base_dir = File.join(File.dirname(__FILE__), 'lib')
 

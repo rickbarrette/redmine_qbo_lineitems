@@ -10,8 +10,6 @@ This plugin allows **billable line items** to be attached to a Redmine issue. Wh
 
 *   **Redmine:** 6.1+
     
-*   **Ruby:** 3.2+
-    
 *   **Parent Plugin:** [Redmine QuickBooks Online](https://github.com/rickbarrette/redmine_qbo) (must be installed and configured)
     
 
@@ -19,9 +17,9 @@ This plugin allows **billable line items** to be attached to a Redmine issue. Wh
 
 ## Compatibility
 
-| Plugin Version | Redmine Version | Ruby Version |
+| Plugin Version | Redmine Version | Parent Plugin Version |
 | --- | --- | --- |
-| 2026.3.6+ | 6.1.x | 3.2+ |
+| 2026.3.8+ | 6.1.x | 2026.3.9+ |
 
 ---
 

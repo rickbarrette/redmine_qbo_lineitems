@@ -8,35 +8,29 @@
 #
 #THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-module RedmineQboLineItems
+module LineItems
   module Hooks
 
-    class ViewHookListener < Redmine::Hook::ViewListener
+    class QboHookListener < Redmine::Hook::Listener
 
-      # Load the javascript to support the autocomplete forms
-      def view_layouts_base_html_head(context = {})
-        safe_join([
-          javascript_include_tag( 'nested_form_controller', plugin: :redmine_qbo_lineitems),
-          javascript_include_tag("line_items", plugin: :redmine_qbo_lineitems),
-          javascript_include_tag("autocomplete", plugin: :redmine_qbo_lineitems),
-          javascript_include_tag("blur", plugin: :redmine_qbo_lineitems),
-          stylesheet_link_tag("line_items", plugin: :redmine_qbo_lineitems)
-        ])
+      # Called by WebhookProcessJob
+      def qbo_additional_entities(context={})
+        log "Added QBO Item to allowed webook entities"
+        return ["Item", "Account"]
       end
 
-      def view_issues_edit_notes_bottom(context = {})
-        return if context[:issue].closed?
-        context[:controller].send(:render_to_string, {
-          partial: 'line_items/issue_form',
-            locals: {
-              f: context[:form]
-            } 
-          }
-        )
+      # Called by the QboSyncDispatcher
+      def qbo_full_sync (context={})
+        log "Adding Item to QBO sync dispatcher"
+        return [Item, Account]
       end
 
-      render_on :view_issues_show_description_bottom , partial: 'line_items/issue_line_items'
-      
+      private
+
+      def log(msg)
+        Rails.logger.info "[QboHookListener] #{msg}"
+      end
+
     end
   end
 end

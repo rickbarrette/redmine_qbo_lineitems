@@ -39,10 +39,4 @@ Redmine::MenuManager.map :admin_menu do |menu|
             html: { class: 'icon icon-list' }
 end
 
-# Dynamically load all Hooks & Patches recursively
-base_dir = File.join(File.dirname(__FILE__), 'lib')
-
-# '**' looks inside subdirectories, '*.rb' matches Ruby files
-Dir.glob(File.join(base_dir, '**', '*.rb')).sort.each do |file|
-  require file
-end
+RedmineQboLineItems.setup

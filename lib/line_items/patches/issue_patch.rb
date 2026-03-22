@@ -8,35 +8,17 @@
 #
 #THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-require_dependency 'issue'
-
-module RedmineQboLineItems
+module LineItems
   module Patches
     module IssuePatch
-
-      def self.included(base)
-        base.extend(ClassMethods)
-        base.send(:include, InstanceMethods)
-
-        base.class_eval do
-          has_many :line_items, dependent: :destroy
-          accepts_nested_attributes_for :line_items, 
-            allow_destroy: true, 
-            reject_if: proc { |attrs| attrs['description'].blank? }
-        end
-        
+      extend ActiveSupport::Concern
+      
+      prepended do
+        has_many :line_items, dependent: :destroy
+        accepts_nested_attributes_for :line_items, 
+          allow_destroy: true, 
+          reject_if: proc { |attrs| attrs['description'].blank? }
       end
-
-      module ClassMethods
-
-      end
-
-      module InstanceMethods
-
-      end
-
     end
-
-    Issue.send(:include, IssuePatch)
   end
 end

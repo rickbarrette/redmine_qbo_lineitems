@@ -100,8 +100,6 @@ class ItemsController < ApplicationController
     params.require(:item).permit(:name, :description, :sku, :unit_price, :active, :account_id, :type, :taxable)
   end
 
-  private 
-
   def log(msg)
     Rails.logger.info "[ItemsController] #{msg}"
   end

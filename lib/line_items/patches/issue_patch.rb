@@ -10,14 +10,41 @@
 
 module LineItems
   module Patches
-    module IssuePatch
-      extend ActiveSupport::Concern
+    module IssuePatch extend ActiveSupport::Concern
       
       prepended do
         has_many :line_items, dependent: :destroy
-        accepts_nested_attributes_for :line_items, 
-          allow_destroy: true, 
-          reject_if: proc { |attrs| attrs['description'].blank? }
+        accepts_nested_attributes_for :line_items, allow_destroy: true, reject_if: proc { |attrs| attrs['description'].blank? }
+
+        def line_items_attributes=(attrs)
+          attrs = attrs.stringify_keys
+
+          # IDs submitted in the form
+          submitted_ids = attrs.values.map { |a| a['id'] }.compact.map(&:to_s)
+
+          # Existing IDs in DB
+          existing_ids = line_items.pluck(:id).map(&:to_s)
+
+          # Find missing ones (these would be implicitly deleted by Rails)
+          missing_ids = existing_ids - submitted_ids
+
+          # Re-add missing records so Rails doesn't delete them
+          missing_ids.each do |id|
+            attrs["preserve_#{id}"] = { 'id' => id }
+          end
+
+          # Only allow explicit deletes or valid updates/creates
+          filtered = attrs.select do |_, item_attrs|
+            item_attrs['_destroy'] == '1' ||
+              item_attrs['id'].present? ||
+              item_attrs['description'].present?
+          end
+
+          super(filtered)
+        rescue => e
+          logger.error "Error processing line items attributes: #{e.message}"
+        end
+
       end
     end
   end

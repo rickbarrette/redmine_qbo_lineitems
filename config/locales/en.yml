@@ -33,6 +33,7 @@ en:
   label_no: "No"
   label_qty: "Quantity"
   label_remove: "Remove"
+  label_running_total: "Running Total"
   label_sync_now_accounts: "Sync Accounts"
   label_sync_now_items: "Sync Items"
   label_type: "Type"

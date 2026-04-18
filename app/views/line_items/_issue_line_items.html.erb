@@ -32,8 +32,18 @@
     <tfoot>
       <tr>
         <td colspan="3" style="text-align:right;"><strong><%= t :label_total %></strong></td>
-        <td><strong><%= number_to_currency(total) %></strong></td>
+        <td>
+          <strong><%= number_to_currency(total) %></strong>
+        </td>
       </tr>
+      <% if @issue.children? %>
+        <tr>
+          <td colspan="3" style="text-align:right;"><strong><%= t :label_running_total %></strong></td>
+          <td>
+            <strong>(<%= number_to_currency(@issue.descendant_line_items_total + total) %>)</strong>
+          </td>
+        </tr>
+      <% end %>
     </tfoot>
   </table>
 </div>

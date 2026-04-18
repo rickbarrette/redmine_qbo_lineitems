@@ -16,6 +16,30 @@ module LineItems
         has_many :line_items, dependent: :destroy
         accepts_nested_attributes_for :line_items, allow_destroy: true, reject_if: proc { |attrs| attrs['description'].blank? }
 
+        # Returns line items for immediate children
+        def children_line_items
+          LineItem.where(issue_id: self.children.pluck(:id))
+        end
+
+        # Calculates the total value of all child line items
+        def children_line_items_total
+          children_line_items.sum(:line_total)
+        end
+
+        # Returns line items for the entire tree below this issue
+        def descendant_line_items
+          LineItem.where(issue_id: self.descendants.pluck(:id))
+        end
+
+        # Calculates the total value of entire tree below this issue
+        def descendant_line_items_total
+          descendant_line_items.sum(:line_total)
+        end
+
+        def line_items_total
+          line_items.sum(:line_total)
+        end
+
         def line_items_attributes=(attrs)
           attrs = attrs.stringify_keys
 

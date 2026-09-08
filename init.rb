@@ -29,14 +29,12 @@ Redmine::Plugin.register :redmine_qbo_lineitems do
   
   # Add safe attributes for core models
   Issue.safe_attributes :line_items_attributes
-end
 
-# Administration menu extension
-Redmine::MenuManager.map :admin_menu do |menu|
-  menu.push :redmine_qbo_lineitems, { controller: 'items', action: 'index' },
-            icon: 'list',
-            caption: :label_items,
-            html: { class: 'icon icon-list' }
+  # Global Permissions
+  permission :view_line_items, { line_items: [:index, :show] }, global: true
+  permission :add_line_items, { line_items: [:new, :create] }, global: true
+  permission :edit_line_items, { line_items: [:edit, :update] }, global: true
+  permission :delete_line_items, { line_items: [:destroy] }, global: true
 end
 
 RedmineQboLineItems.setup

@@ -24,19 +24,19 @@ module LineItems
         ])
       end
 
+      # Add the line items form to the issue edit page
       def view_issues_edit_notes_bottom(context = {})
         return if context[:issue].closed?
-        context[:controller].send(:render_to_string, {
-          partial: 'line_items/issue_form',
-            locals: {
-              f: context[:form]
-            } 
-          }
-        )
+        return unless User.current.allowed_to?(:edit_line_items, nil, global: true)
+        context[:controller].send(:render_to_string, { partial: 'line_items/issue_form', locals: { f: context[:form] } })
       end
 
-      render_on :view_issues_show_description_bottom , partial: 'line_items/issue_line_items'
-      
+      # Add the line items to the issue view page
+      def view_issues_show_description_bottom (context = {})
+        return unless User.current.allowed_to?(:view_line_items, nil, global: true)
+        context[:controller].send(:render_to_string, { partial: 'line_items/issue_line_items', locals: { issue: context[:issue] } })
+      end
+
     end
   end
 end

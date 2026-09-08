@@ -35,13 +35,15 @@
     0.00
   </td>
 
-  <% unless readonly %>
-    <td class="actions">
-      <button type="button"
-              class="icon-only icon-del"
-              title="<%= l(:label_remove) %>"
-              data-nested-form-remove>
-      </button>
-    </td>
+  <% if User.current.allowed_to?(:delete_line_items, nil, global: true) %>
+    <% unless readonly %>
+      <td class="actions">
+        <button type="button"
+                class="icon-only icon-del"
+                title="<%= l(:label_remove) %>"
+                data-nested-form-remove>
+        </button>
+      </td>
+    <% end %>
   <% end %>
 </tr>

@@ -45,11 +45,14 @@
     </template>
 
     <p>
-      <button type="button"
-              class="icon icon-add"
-              data-nested-form-add>
-        <%= l(:button_add) %>
-      </button>
+        
+      <% if User.current.allowed_to?(:add_line_items, nil, global: true) %>
+        <button type="button"
+                class="icon icon-add"
+                data-nested-form-add>
+          <%= l(:button_add) %>
+        </button>
+      <% end %>
     </p>
   <% end %>
 

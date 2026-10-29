@@ -9,8 +9,7 @@
 #THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 class Item < QboBaseModel
-  belongs_to :issue
-  belongs_to :account
+  belongs_to :account, optional: true
   
   validates_presence_of :id, :description
   validates :unit_price, numericality: { greater_than_or_equal_to: 0 }
@@ -20,9 +19,10 @@ class Item < QboBaseModel
   after_initialize :set_defaults, if: :new_record?
   before_destroy :make_inactive
 
-  # Updates Both local & remote DB account ref
+  # Updates Both local & remote DB account ref (a blank or unknown account leaves QBO's ref unchanged)
   def account_id=(id)
-    details.income_account_ref = Account.find(id).ref
+    account = Account.find_by(id: id) if id.present?
+    details.income_account_ref = account.ref if account
     super
   end
 
@@ -43,10 +43,6 @@ class Item < QboBaseModel
     push_to_qbo
   end
 
-  def ref
-    Quickbooks::Model::BaseReference.new
-  end
-  
   def set_defaults
     self.taxable = true if taxable.nil?
   end

@@ -14,7 +14,13 @@ class ItemService < ServiceBase
 
   def build_qbo_remote
     log "Building new QBO Item"
-    Quickbooks::Model::Item.new(type: Account.get_default&.ref)
+    # New items default to a non-inventory item in the default income account; the item form then
+    # sets the type and account the user chose.
+    item = Quickbooks::Model::Item.new
+    item.type = Quickbooks::Model::Item::NON_INVENTORY_TYPE
+    default_account = Account.get_default
+    item.income_account_ref = default_account.ref if default_account
+    item
   end
 
 end

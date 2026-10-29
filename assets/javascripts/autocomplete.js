@@ -61,17 +61,17 @@
 
       });
 
-      // Custom rendering of autocomplete suggestions
+      // Custom rendering of autocomplete suggestions. Values are set with .text() so item names,
+      // SKUs and descriptions from QuickBooks can never be interpreted as HTML.
       ac.autocomplete("instance")._renderItem = function(ul, item) {
-        return $("<li>")
-          .append(
-            "<div class='autocomplete-item'>" +
-              "<div class='item-name'>" + item.name + "</div>" +
-              "<div class='item-sku'>" + item.sku + "</div>" +
-              "<div class='item-description'>" + item.description + "</div>" +
-            "</div>"
-          )
-          .appendTo(ul);
+        let $box = $("<div>").addClass("autocomplete-item");
+        $("<div>").addClass("item-name").text(item.name || "").appendTo($box);
+        if (item.sku) {
+          $("<div>").addClass("item-sku").text(item.sku).appendTo($box);
+        }
+        $("<div>").addClass("item-description").text(item.description || "").appendTo($box);
+
+        return $("<li>").append($box).appendTo(ul);
       };
 
     });

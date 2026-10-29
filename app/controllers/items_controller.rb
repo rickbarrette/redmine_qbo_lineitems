@@ -9,7 +9,13 @@
 #THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 class ItemsController < ApplicationController
-  before_action :require_login
+  layout 'admin'
+  menu_item :redmine_qbo_lineitems
+
+  # The item catalog is pushed to QuickBooks, so managing it is admin-only. The autocomplete feeds the
+  # line item form on issues and is allowed with the "Add line items" or "Edit line items" permission.
+  before_action :require_admin, except: :autocomplete
+  before_action :authorize_global, only: :autocomplete
   before_action :find_item, only: [:show, :edit, :update, :destroy]
 
   # Used for autocomplete form
@@ -32,7 +38,7 @@ class ItemsController < ApplicationController
     if @item.save
       redirect_to item_path(@item), notice: l(:notice_successful_create)
     else
-      render :new
+      render :new, status: :unprocessable_entity
     end
   rescue => e
     log "Unexpected error creating item: #{e.message}"
@@ -55,10 +61,6 @@ class ItemsController < ApplicationController
   end
 
   def edit
-  rescue => e
-    log "Failed to edit item"
-    flash[:error] = e.message
-    render_404
   end
 
   def index
@@ -67,7 +69,6 @@ class ItemsController < ApplicationController
 
   def new
     @item = Item.new
-    @item.taxable.nil? ? true : @item.taxable
   end
 
   def show
@@ -82,7 +83,7 @@ class ItemsController < ApplicationController
     if @item.update(item_params)
       redirect_to item_path(@item), notice: l(:notice_successful_update)
     else
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 
@@ -90,9 +91,7 @@ class ItemsController < ApplicationController
 
   def find_item
     @item = Item.find(params[:id])
-  rescue => e
-    log "Failed to find item"
-    flash[:error] = e.message
+  rescue ActiveRecord::RecordNotFound
     render_404
   end
 

@@ -24,8 +24,11 @@ class ItemSyncService < SyncServiceBase
 
   map_attribute :active, :active?
   map_attribute :taxable, :taxable?
+  # Items without an income account (e.g. categories), or whose account hasn't synced yet, get none
+  # instead of failing the whole sync; the next sync fills it in.
   map_attribute :account do |remote|
-    Account.find remote.income_account_ref.value.to_i
+    account_id = remote.income_account_ref&.value
+    account_id.present? ? Account.find_by(id: account_id.to_i) : nil
   end
   map_attributes :description, :id, :name, :sku, :type, :unit_price
 

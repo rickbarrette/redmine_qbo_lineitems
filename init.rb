@@ -27,14 +27,18 @@ Redmine::Plugin.register :redmine_qbo_lineitems do
     raise 'Please install the redmine_qbo plugin (https://github.com/rickbarrette/redmine_qbo)'
   end
   
-  # Add safe attributes for core models
-  Issue.safe_attributes :line_items_attributes
+  # Line items can be submitted with an issue only by users who may add, edit or delete them.
+  # Which changes are applied is checked per line in Issue#line_items_attributes= (see IssuePatch).
+  Issue.safe_attributes :line_items_attributes, if: lambda { |_issue, user|
+    %i[add_line_items edit_line_items delete_line_items].any? { |p| user.allowed_to?(p, nil, global: true) }
+  }
 
-  # Global Permissions
-  permission :view_line_items, { line_items: [:index, :show] }, global: true
-  permission :add_line_items, { line_items: [:new, :create] }, global: true
-  permission :edit_line_items, { line_items: [:edit, :update] }, global: true
-  permission :delete_line_items, { line_items: [:destroy] }, global: true
+  # Global Permissions. Line items live on issues; these control what users can do with them there.
+  # Managing the QBO item catalog, accounts and syncs is admin-only.
+  permission :view_line_items, {}, global: true
+  permission :add_line_items, { items: [:autocomplete] }, global: true
+  permission :edit_line_items, { items: [:autocomplete] }, global: true
+  permission :delete_line_items, {}, global: true
 end
 
 RedmineQboLineItems.setup

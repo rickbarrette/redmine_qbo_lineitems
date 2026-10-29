@@ -15,7 +15,7 @@
   </p>
   <p>
     <label><strong><%= t(:label_last_sync) %> (QBO)</strong></label>
-    <%= Qbo.exists? ? Qbo.last_sync : 'Never synced' %>
+    <%= Qbo.exists? ? Qbo.last_sync : l(:label_never_synced) %>
   </p>
   <p>
     <label><strong><%= t(:label_default_account) %></strong></label>
@@ -24,7 +24,7 @@
 </div>
 
 <fieldset class="box">
-  <legend>Management & Synchronization</legend>
+  <legend><%= l(:label_management_and_sync) %></legend>
   
   <div style="margin-bottom: 15px;">
     <%= link_to t(:label_sync_now_items), sync_items_path, class: 'button icon icon-reload' %>

@@ -9,15 +9,25 @@
 #THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 class AccountsController < ApplicationController
-  
+  layout 'admin'
+  menu_item :redmine_qbo_lineitems
+
+  # Accounts come from QuickBooks; choosing the default and syncing are admin-only
+  before_action :require_admin
+
   def index
     @accounts = Account.where(classification: 'Revenue').order(:name)
   end
 
   def set_default
-    account = Account.find(params[:default_account_id])
-    account.update(default: true)
-    redirect_to accounts_path, notice: "Default account updated."
+    account = Account.find_by(id: params[:default_account_id])
+
+    if account&.update(default: true)
+      flash[:notice] = l(:notice_default_account_updated)
+    else
+      flash[:error] = l(:error_default_account_not_selected)
+    end
+    redirect_to accounts_path
   end
 
   def sync

@@ -1,6 +1,12 @@
-<% readonly = @issue.status.is_closed? %>
+<%
+  readonly = @issue.status.is_closed?
+  can_add = User.current.allowed_to?(:add_line_items, nil, global: true)
+  can_edit = User.current.allowed_to?(:edit_line_items, nil, global: true)
+  can_delete = User.current.allowed_to?(:delete_line_items, nil, global: true)
+  permissions = { can_edit: can_edit, can_delete: can_delete }
+%>
 
-<% @issue.line_items.build if @issue.line_items.empty? && !readonly %>
+<% @issue.line_items.build if @issue.line_items.empty? && !readonly && can_add %>
 
 <div class="box tabular"
      data-nested-form
@@ -25,7 +31,8 @@
       <%= f.fields_for :line_items do |item_form| %>
         <%= render "line_items/line_item_fields",
               f: item_form,
-              readonly: readonly %>
+              readonly: readonly,
+              **permissions %>
       <% end %>
     </tbody>
   </table>
@@ -35,24 +42,22 @@
     <span id="line-items-grand-total">0.00</span>
   </p>
 
-  <% unless readonly %>
+  <% if !readonly && can_add %>
     <template data-nested-form-template>
       <%= f.fields_for :line_items, LineItem.new, child_index: "NEW_RECORD" do |item_form| %>
         <%= render "line_items/line_item_fields",
               f: item_form,
-              readonly: false %>
+              readonly: false,
+              **permissions %>
       <% end %>
     </template>
 
     <p>
-        
-      <% if User.current.allowed_to?(:add_line_items, nil, global: true) %>
-        <button type="button"
-                class="icon icon-add"
-                data-nested-form-add>
-          <%= l(:button_add) %>
-        </button>
-      <% end %>
+      <button type="button"
+              class="icon icon-add"
+              data-nested-form-add>
+        <%= l(:button_add) %>
+      </button>
     </p>
   <% end %>
 

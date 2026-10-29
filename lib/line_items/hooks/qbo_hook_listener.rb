@@ -21,8 +21,9 @@ module LineItems
 
       # Called by the QboSyncDispatcher
       def qbo_full_sync (context={})
-        log "Adding Item to QBO sync dispatcher"
-        return [Item, Account]
+        log "Adding Account and Item to QBO sync dispatcher"
+        # Accounts first: items reference their income account
+        return [Account, Item]
       end
 
       private

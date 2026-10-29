@@ -1,11 +1,11 @@
-<% if @issue.line_items.any? || @issue.descendant_line_items_total > 0%>
+<% if issue.line_items.any? || issue.descendant_line_items_total > 0%>
 <hr/>
 <div>
   <p><strong><%= t :label_line_items  %></strong></p>
 
   <% total = 0 %>
 
-  <% if @issue.line_items.any?%>
+  <% if issue.line_items.any?%>
 
     <table class="list line-items-table">
       <thead>
@@ -19,7 +19,7 @@
 
       <tbody>
 
-        <% @issue.line_items.each do |item| %>
+        <% issue.line_items.each do |item| %>
           <% line_total = item.quantity.to_f * item.unit_price.to_f %>
           <% total += line_total %>
 
@@ -35,7 +35,7 @@
       <% end %>
 
       <tfoot>
-        <% if @issue.line_items.any?%>
+        <% if issue.line_items.any?%>
           <tr>
             <td colspan="3" style="text-align:right;"><strong><%= t :label_total %></strong></td>
             <td>
@@ -44,11 +44,11 @@
           </tr>
         <% end %>
 
-      <% if @issue.descendant_line_items_total > 0 %>
+      <% if issue.descendant_line_items_total > 0 %>
         <tr>
           <td colspan="3" style="text-align:right;"><strong><%= t :label_running_total %></strong></td>
           <td>
-            <strong>(<%= number_to_currency(@issue.descendant_line_items_total + total) %>)</strong>
+            <strong>(<%= number_to_currency(issue.descendant_line_items_total + total) %>)</strong>
           </td>
         </tr>
       <% end %>

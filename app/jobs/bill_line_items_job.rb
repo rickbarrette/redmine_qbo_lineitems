@@ -14,8 +14,10 @@ class BillLineItemsJob < ActiveJob::Base
 
   # Creates an estimate for a line items attached to an issue, and then marking those entries as billed in Redmine.
   # This job is typically triggered after an issue is closed.
-  def perform(issue)
-    return unless issue.customer
+  # Takes an issue id (jobs queued by older versions pass the Issue itself, which still works)
+  def perform(issue_or_id)
+    issue = issue_or_id.is_a?(Issue) ? issue_or_id : Issue.find_by(id: issue_or_id)
+    return unless issue&.customer
 
     log "Starting billing for issue ##{issue.id}"
     issue.with_lock do
@@ -34,7 +36,7 @@ class BillLineItemsJob < ActiveJob::Base
     log "Completed billing of for issue ##{issue.id}"
     Qbo.update_time_stamp
   rescue => e
-    log "Billing failed for issue ##{issue.id} - #{e.message}"
+    log "Billing failed for issue ##{issue&.id || issue_or_id} - #{e.message}"
     raise e
   end
 

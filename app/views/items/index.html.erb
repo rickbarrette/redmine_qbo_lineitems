@@ -27,16 +27,16 @@
             <td class="unit_price"><%= number_to_currency(item.unit_price) %></td>
             <td class="taxable center">
               <% if item.taxable %>
-                <span class="icon icon-ok" style="color: green;"><%=t(:yes)%></span>
+                <span class="icon icon-ok" style="color: green;"><%= l(:general_text_Yes) %></span>
               <% else %>
-                <span class="icon icon-not-ok" style="color: #999;"><%=t(:no)%></span>
+                <span class="icon icon-not-ok" style="color: #999;"><%= l(:general_text_No) %></span>
               <% end %>
             </td>
             <td class="active center">
               <% if item.active %>
-                <span class="icon icon-ok" style="color: green;"><%=t(:yes)%></span>
+                <span class="icon icon-ok" style="color: green;"><%= l(:general_text_Yes) %></span>
               <% else %>
-                <span class="icon icon-not-ok" style="color: #999;"><%=t(:no)%></span>
+                <span class="icon icon-not-ok" style="color: #999;"><%= l(:general_text_No) %></span>
               <% end %>
             </td>
             <td class="buttons">

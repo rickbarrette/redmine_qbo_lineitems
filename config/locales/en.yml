@@ -42,3 +42,9 @@ en:
 
   notice_added_from: "Added from issue #"
   
+  error_default_account_not_selected: "Select an account to make it the default."
+  label_billed: "Billed"
+  label_management_and_sync: "Management & Synchronization"
+  label_never_synced: "Never synced"
+  notice_default_account_updated: "Default account updated."
+  text_line_item_billed: "Already added to a QuickBooks estimate, so it can't be changed or removed."

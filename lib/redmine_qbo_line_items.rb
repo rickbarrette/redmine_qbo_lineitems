@@ -16,7 +16,6 @@ module RedmineQboLineItems
       Issue.prepend LineItems::Patches::IssuePatch
 
       # Hooks
-      LineItems::Hooks::IssuesSaveHookListener
       LineItems::Hooks::QboHookListener
       LineItems::Hooks::ViewHookListener
 

@@ -27,7 +27,7 @@ module LineItems
       # Add the line items form to the issue edit page
       def view_issues_edit_notes_bottom(context = {})
         return if context[:issue].closed?
-        return unless User.current.allowed_to?(:edit_line_items, nil, global: true)
+        return unless %i[add_line_items edit_line_items delete_line_items].any? { |p| User.current.allowed_to?(p, nil, global: true) }
         context[:controller].send(:render_to_string, { partial: 'line_items/issue_form', locals: { f: context[:form] } })
       end
 

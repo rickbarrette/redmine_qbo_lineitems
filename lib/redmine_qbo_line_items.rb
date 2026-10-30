@@ -16,13 +16,7 @@ module RedmineQboLineItems
       Issue.prepend LineItems::Patches::IssuePatch
 
       # Hooks
-      LineItems::Hooks::QboHookListener
       LineItems::Hooks::ViewHookListener
-
-      # Administration menu extension
-      Redmine::MenuManager.map :admin_menu do |menu|
-        menu.push :redmine_qbo_lineitems, { controller: 'items', action: 'index' }, icon: 'list', caption: :label_items, html: { class: 'icon icon-list' }
-      end
     end
   end
 end

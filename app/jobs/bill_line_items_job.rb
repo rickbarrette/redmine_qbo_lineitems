@@ -24,10 +24,7 @@ class BillLineItemsJob < ActiveJob::Base
       unbilled_entries = issue.line_items.where(billed: [false, nil]).lock
       return if unbilled_entries.blank?
 
-      qbo = QboConnectionService.current!
-      qbo.perform_authenticated_request do |access_token|
-        create_estimate(issue, unbilled_entries, access_token, qbo)
-      end
+      create_estimate(issue, unbilled_entries)
 
       # Only mark billed AFTER successful QBO creation
       unbilled_entries.update_all(billed: true)
@@ -42,35 +39,28 @@ class BillLineItemsJob < ActiveJob::Base
 
   private
 
-  # Create an Estimate record in QBO for each unbilled line item
-  def create_estimate(issue, unbilled_entries, access_token, qbo)
-    log "Creating Estimate records in QBO for #{issue.customer.name} from issue ##{issue.id}"
-    
-    estimate = Quickbooks::Model::Estimate.new(customer_id: issue.customer.id)
-    estimate_service = Quickbooks::Service::Estimate.new( company_id: qbo.realm_id, access_token: access_token)
+  # Creates the QuickBooks estimate with redmine_qbo_billing, which writes every estimate: a first line
+  # saying where the lines came from, then the unbilled line items. The VIN comes from the issue's vehicle.
+  def create_estimate(issue, unbilled_entries)
+    log "Creating estimate in QBO for #{issue.customer.name} from issue ##{issue.id}"
     memo = "Added from: #{issue.tracker} ##{issue.id}: #{issue.subject}"
-    estimate.private_note = memo
-    estimate.line_items << Quickbooks::Model::InvoiceLineItem.new(description: memo, detail_type: 'DescriptionOnly' )
-    
-    unbilled_entries.each do |item|
-      log "Creating Line Item for #{item.description}"
-      line = Quickbooks::Model::InvoiceLineItem.new
-      line.amount = item.line_total
-      line.description = item.description
-      line.sales_item! do |detail|
-        detail.unit_price = item.unit_price
-        detail.quantity = item.quantity
-        # Assign "TAX" only if the item is taxable or unknown
-        if item.item.nil? || item.item.taxable
-          detail.tax_code_ref = Quickbooks::Model::BaseReference.new("TAX")
-        end
-      end
 
-      estimate.line_items << line
+    lines = [{ description: memo }]
+    unbilled_entries.each do |entry|
+      lines << {
+        item_id: entry.item_id,
+        description: entry.description,
+        quantity: entry.quantity,
+        rate: entry.unit_price,
+        # Taxable unless the item says otherwise (or the line has no item)
+        taxable: entry.item.nil? || entry.item.taxable != false
+      }
     end
 
-    e = estimate_service.create(estimate)
-    log "Created estimate ##{e.doc_number}"
+    vin = issue.respond_to?(:vehicle) ? issue.vehicle&.vin : nil
+    estimate = RedmineQboBilling::EstimateWriter.create_estimate(customer: issue.customer, lines: lines,
+                                                                  private_note: memo, vin: vin)
+    log "Created estimate ##{estimate.doc_number}"
   end
 
   def log(msg)

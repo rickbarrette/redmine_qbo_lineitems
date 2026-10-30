@@ -11,7 +11,9 @@ This plugin allows **billable line items** to be attached to a Redmine issue. Wh
 *   **Redmine:** 6.1+
     
 *   **Parent Plugin:** [Redmine QuickBooks Online](https://github.com/rickbarrette/redmine_qbo) (must be installed and configured)
-    
+
+*   **Billing Plugin:** [Redmine QuickBooks Billing](https://github.com/rickbarrette/redmine_qbo_billing). It holds the QuickBooks product/service list, the income accounts, and the estimate writing this plugin uses.
+
 
 ---
 
@@ -20,6 +22,7 @@ This plugin allows **billable line items** to be attached to a Redmine issue. Wh
 | Plugin Version | Redmine Version | Parent Plugin Version |
 | --- | --- | --- |
 | 2026.3.8+ | 6.1.x | 2026.3.9+ |
+| 2026.11.0+ | 7.0.x | 2026.10.1+, with redmine_qbo_billing 2026.10.0+ |
 
 ---
 
@@ -86,9 +89,11 @@ Before using this plugin:
     
 2.  Ensure your **QuickBooks Online** company file is connected.
 
-3.  Sync Accounts & Items via plugin settings
+3.  Install redmine_qbo_billing, then sync accounts and items and set the default income account for new items in its plugin settings
 
-4.  Set default income account for new items via plugin settings
+### Upgrading from a version that managed items and accounts
+
+Items and accounts moved to redmine_qbo_billing. Install redmine_qbo_billing next to this plugin and run the plugin migrations as usual: billing finds the existing `items` and `accounts` tables and keeps using them, so no data is moved or lost. The Items and Accounts pages keep their URLs.
 
 ---
 

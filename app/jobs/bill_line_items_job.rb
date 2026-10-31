@@ -39,9 +39,9 @@ class BillLineItemsJob < ActiveJob::Base
 
   private
 
-  # Creates the QuickBooks estimate with redmine_qbo_billing, which writes every estimate: a first line
+  # Creates the QuickBooks estimate with redmine_qbo's estimate writer, which writes every estimate: a first line
   # saying where the lines came from, then the unbilled line items. The VIN and mileage are the work order's,
-  # from redmine_qbo_billing's issue values hook (redmine_qbo_vehicles gives the VIN, the Mileage field the mileage).
+  # from redmine_qbo's issue values hook (redmine_qbo_vehicles gives the VIN, the Mileage field the mileage).
   def create_estimate(issue, unbilled_entries)
     log "Creating estimate in QBO for #{issue.customer.name} from issue ##{issue.id}"
     memo = "Added from: #{issue.tracker} ##{issue.id}: #{issue.subject}"

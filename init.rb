@@ -19,19 +19,12 @@ Redmine::Plugin.register :redmine_qbo_lineitems do
   author_url 'https://barrettefabrication.com'
   requires_redmine version_or_higher: '6.1.0'
 
-  # Ensure redmine_qbo is installed
+  # Ensure redmine_qbo is installed: it has the QuickBooks product/service list, accounts and estimate
+  # writing this plugin uses (from 2026.11.0)
   begin
-    requires_redmine_plugin :redmine_qbo, version_or_higher: '2026.3.9'
+    requires_redmine_plugin :redmine_qbo, version_or_higher: '2026.11.0'
   rescue Redmine::PluginNotFound
     raise 'Please install the redmine_qbo plugin (https://github.com/rickbarrette/redmine_qbo)'
-  end
-
-  # The QuickBooks product/service list, accounts and estimate writing live in redmine_qbo_billing
-  # (it sorts before this plugin, so Redmine has already loaded it)
-  begin
-    requires_redmine_plugin :redmine_qbo_billing, version_or_higher: '2026.10.0'
-  rescue Redmine::PluginNotFound
-    raise 'Please install the redmine_qbo_billing plugin (https://github.com/rickbarrette/redmine_qbo_billing)'
   end
   
   # Line items can be submitted with an issue only by users who may add, edit or delete them.
@@ -41,7 +34,7 @@ Redmine::Plugin.register :redmine_qbo_lineitems do
   }
 
   # Global Permissions. Line items live on issues; these control what users can do with them there.
-  # The item search (redmine_qbo_billing's items#autocomplete) feeds the line item form.
+  # The item search (redmine_qbo's items#autocomplete) feeds the line item form.
   permission :view_line_items, {}, global: true
   permission :add_line_items, { items: [:autocomplete] }, global: true
   permission :edit_line_items, { items: [:autocomplete] }, global: true

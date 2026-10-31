@@ -8,8 +8,8 @@
 #
 #THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# Links each line item to a QuickBooks item. The items table itself now belongs to redmine_qbo_billing
-# (which Redmine migrates first); databases that ran the old version of this migration already have both.
+# Links each line item to a QuickBooks item. The items table itself now belongs to redmine_qbo (which Redmine
+# migrates first); databases that ran the old version of this migration already have both.
 class CreateItems < ActiveRecord::Migration[7.0]
   def up
     add_reference :line_items, :item, foreign_key: true unless column_exists?(:line_items, :item_id)

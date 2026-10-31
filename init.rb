@@ -14,15 +14,15 @@ Redmine::Plugin.register :redmine_qbo_lineitems do
   name 'Redmine QBO Line Items plugin'
   author 'Rick Barrette'
   description 'A plugin for Redmine to extend the capabilitys of the Redmine QuickBooks Online plugin to attach billable line items to an isuue'
-  version '2026.11.0'
+  version '2026.11.1'
   url 'https://github.com/rickbarrette/redmine_qbo_lineitems'
   author_url 'https://barrettefabrication.com'
   requires_redmine version_or_higher: '6.1.0'
 
   # Ensure redmine_qbo is installed: it has the QuickBooks product/service list, accounts and estimate
-  # writing this plugin uses (from 2026.11.0)
+  # writing this plugin uses (from 2026.11.0; generic custom fields from 2026.11.2)
   begin
-    requires_redmine_plugin :redmine_qbo, version_or_higher: '2026.11.0'
+    requires_redmine_plugin :redmine_qbo, version_or_higher: '2026.11.2'
   rescue Redmine::PluginNotFound
     raise 'Please install the redmine_qbo plugin (https://github.com/rickbarrette/redmine_qbo)'
   end

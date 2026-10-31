@@ -20,7 +20,8 @@ This plugin allows **billable line items** to be attached to a Redmine issue. Wh
 | Plugin Version | Redmine Version | Parent Plugin Version |
 | --- | --- | --- |
 | 2026.3.8+ | 6.1.x | 2026.3.9+ |
-| 2026.11.0+ | 7.0.x | 2026.11.0+ (it holds the product/service list, accounts and estimate writing) |
+| 2026.11.1+ | 7.0.x | 2026.11.2+ (generic QuickBooks custom fields) |
+| 2026.11.0 | 7.0.x | 2026.11.0+ (it holds the product/service list, accounts and estimate writing) |
 
 ---
 

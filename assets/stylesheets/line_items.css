@@ -1,20 +1,250 @@
+/* Line items, styled like redmine_qbo's estimate and invoice editor */
+.line-items-sheet, .line-items-table {
+  --li-border: #babec5;
+  --li-muted: #6b6c72;
+  --li-text: #393a3d;
+  --li-green: #2ca01c;
+}
+
 .line-items-table {
   width: 100%;
 }
 
-.line-items-table input {
+.line-items-editor {
+  border-collapse: collapse;
+}
+
+.line-items-editor th {
+  font-size: .78em;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--li-muted);
+  text-align: left;
+  padding: 8px 6px;
+  border-bottom: 2px solid #d4d7dc;
+  white-space: nowrap;
+}
+
+.line-items-editor td {
+  padding: 6px;
+  border-bottom: 1px solid #e3e5e8;
+  vertical-align: top;
+}
+
+/* Issue page: Redmine's list table, with the description on the left and the amounts on the right */
+table.list.line-items-table th:first-child,
+table.list.line-items-table td:first-child {
+  text-align: left;
+}
+table.list.line-items-table th:nth-child(n+2),
+table.list.line-items-table td:nth-child(n+2) {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Edit form */
+.line-items-sheet {
+  background: #fff;
+}
+
+.line-items-title {
+  display: block;
+  font-size: 0.9em;
+  font-weight: 600;
+  color: var(--li-text);
+  margin-bottom: 4px;
+}
+
+.line-items-wrap {
+  overflow-x: auto;
+}
+
+.line-items-editor tbody {
+  counter-reset: line-item;
+}
+
+/* Rows removed in the form are hidden, and hidden rows aren't counted */
+.line-items-editor tr.line-item {
+  counter-increment: line-item;
+}
+
+.line-items-editor td.line-item-number::before {
+  content: counter(line-item);
+}
+
+.line-items-editor .line-item-number {
+  width: 24px;
+  color: var(--li-muted);
+  text-align: right;
+}
+.line-items-editor td.line-item-number {
+  padding-top: 11px;
+}
+
+.line-items-editor .line-item-qty { width: 90px; }
+.line-items-editor .line-item-price,
+.line-items-editor .line-item-total { width: 120px; }
+.line-items-editor .actions { width: 28px; }
+
+.line-items-editor th.line-item-qty,
+.line-items-editor th.line-item-price,
+.line-items-editor th.line-item-total {
+  text-align: right;
+}
+
+.line-items-editor td.line-item-total {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  padding: 11px 12px 6px 6px;
+}
+
+/* Inputs only show a border on the row being worked on */
+.line-items-editor input[type=text],
+.line-items-editor input[type=number] {
   width: 100%;
+  height: auto;
   box-sizing: border-box;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  padding: 5px 6px;
+  font-size: 1em;
+  font-family: inherit;
+  background: transparent;
 }
 
-.qty-field {
-  max-width: 90px;
+.line-items-editor td.line-item-qty input,
+.line-items-editor td.line-item-price input {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 
-.price-field {
-  max-width: 120px;
+.line-items-editor tr:hover input,
+.line-items-editor tr:focus-within input {
+  border-color: var(--li-border);
+  background: #fff;
 }
 
+.line-items-editor input:focus {
+  outline: none;
+  border-color: var(--li-green);
+  box-shadow: 0 0 0 2px rgba(44, 160, 28, .25);
+}
+
+.line-items-editor input[disabled],
+.line-items-editor tr:hover input[disabled] {
+  border-color: transparent;
+  background: transparent;
+  color: var(--li-text);
+}
+
+.line-item-remove-button {
+  border: 0;
+  background: none;
+  cursor: pointer;
+  color: #8d9096;
+  padding: 2px;
+  margin-top: 4px;
+  visibility: hidden;
+}
+
+.line-items-editor tr:hover .line-item-remove-button,
+.line-items-editor tr:focus-within .line-item-remove-button {
+  visibility: visible;
+}
+
+.line-item-remove-button:hover {
+  color: #c00;
+}
+
+.line-items-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.line-items-buttons {
+  margin: 12px 0 0;
+  padding: 0;
+}
+
+.line-items-button {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  height: 34px;
+  margin: 0;
+  border: 1px solid #8d9096;
+  background: #fff;
+  color: var(--li-text);
+  border-radius: 4px;
+  padding: 0 16px;
+  font-size: 1em;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.line-items-button:hover {
+  background: #f4f5f8;
+}
+
+.line-items-totals {
+  border-collapse: collapse;
+  min-width: 260px;
+  margin: 8px 0 0 auto;
+  font-variant-numeric: tabular-nums;
+}
+
+.line-items-totals th {
+  text-align: right;
+  color: var(--li-text);
+  padding: 10px 16px 6px 0;
+}
+
+.line-items-totals td {
+  text-align: right;
+  min-width: 110px;
+  padding: 10px 12px 6px 0;
+}
+
+.line-items-totals th,
+.line-items-totals td {
+  font-weight: 700;
+  font-size: 1.15em;
+  border-top: 1px solid #d4d7dc;
+}
+
+/* Billed line items are locked: they're already on a QuickBooks estimate */
+.line-items-editor td.line-item-description-cell {
+  position: relative;
+}
+
+.line-items-editor tr.billed td {
+  background: #f4f5f8;
+}
+
+.line-item-billed-badge {
+  position: absolute;
+  top: 0;
+  right: 8px;
+  z-index: 1;
+  font-size: .65em;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: #108000;
+  background: #e5f2e5;
+  border-radius: 8px;
+  padding: 0 6px;
+  pointer-events: none;
+}
+
+/* Item suggestions */
 .autocomplete-item {
   line-height: 1.2;
 }
@@ -33,59 +263,102 @@
   color: #999;
 }
 
-/* MOBILE MODE */
-@media screen and (max-width: 700px) {
+/* Phones: each line becomes a small card (number, description and delete; quantity, price and total) */
+@media screen and (max-width: 699px) {
 
   .line-items-table thead {
     display: none;
   }
 
-  .line-items-table,
-  .line-items-table tbody,
-  .line-items-table tr,
-  .line-items-table td {
+  .line-items-table td[data-label]::before {
+    content: attr(data-label);
     display: block;
-    width: 100%;
+    font-size: .75em;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--li-muted);
+    margin-bottom: 2px;
   }
 
-  .line-items-table tr {
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    padding: 10px;
-    margin-bottom: 10px;
+  .line-items-editor tr.line-item {
+    display: grid;
+    grid-template-columns: 24px 1fr 1fr 1fr 32px;
+    gap: 4px 8px;
+    padding: 10px 0;
+    border-bottom: 1px solid #d4d7dc;
+  }
+
+  .line-items-editor tr.line-item td {
+    display: block;
+    border: 0;
+    padding: 0;
+    width: auto;
+    text-align: left;
+  }
+
+  .line-items-editor td.line-item-number { grid-column: 1; grid-row: 1; padding-top: 22px; text-align: left; }
+  .line-items-editor td.line-item-description-cell { grid-column: 2 / 5; grid-row: 1; }
+  .line-items-editor td.actions { grid-column: 5; grid-row: 1; padding-top: 18px; text-align: center; }
+  .line-items-editor td.line-item-qty { grid-column: 2; grid-row: 2; }
+  .line-items-editor td.line-item-price { grid-column: 3; grid-row: 2; }
+  .line-items-editor tr.line-item td.line-item-total { grid-column: 4 / 6; grid-row: 2; padding: 0; text-align: right; }
+  .line-items-editor tr.line-item td.line-item-total::before { text-align: right; }
+  .line-items-editor td.line-item-total { line-height: 2.4; }
+  .line-items-editor tr.line-item td.line-item-total::before { line-height: normal; }
+
+  .line-items-editor input[type=text]:not([disabled]),
+  .line-items-editor input[type=number]:not([disabled]) {
+    border-color: var(--li-border);
     background: #fff;
   }
 
-  .line-items-table td {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  .line-item-remove-button {
+    visibility: visible;
+  }
+
+  .line-items-editor tr.billed { background: #f4f5f8; }
+  .line-items-editor tr.billed td { background: none; }
+
+  .line-items-totals {
+    width: 100%;
+  }
+
+  /* Issue page: plain cards */
+  .line-items-table:not(.line-items-editor),
+  .line-items-table:not(.line-items-editor) tbody,
+  .line-items-table:not(.line-items-editor) tfoot,
+  .line-items-table:not(.line-items-editor) tr,
+  .line-items-table:not(.line-items-editor) td {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .line-items-table:not(.line-items-editor) tbody tr {
+    border-bottom: 1px solid #d4d7dc;
     padding: 6px 0;
   }
 
-  .line-items-table td::before {
-    content: attr(data-label);
-    font-weight: bold;
-    margin-right: 10px;
+  .line-items-table:not(.line-items-editor) td {
+    display: flex;
+    justify-content: space-between;
+    border: 0;
+    padding: 3px 0;
   }
 
-  .line-items-table td.actions {
-    justify-content: flex-end;
+  .line-items-table:not(.line-items-editor) td[data-label]::before {
+    display: inline;
+    margin: 0 10px 0 0;
   }
 
-}
-/* Billed line items are locked: they're already on a QuickBooks estimate */
-.line-item.billed input {
-  background-color: #f6f6f6;
-}
-.line-item-billed-badge {
-  display: inline-block;
-  margin-left: 6px;
-  padding: 1px 6px;
-  border-radius: 3px;
-  font-size: 0.8em;
-  font-weight: bold;
-  color: #3e7b3e;
-  background-color: #e5f2e5;
-  border: 1px solid #c6e0c6;
+  .line-items-table:not(.line-items-editor) tfoot tr {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+  }
+
+  .line-items-table:not(.line-items-editor) tfoot td {
+    display: block;
+    width: auto;
+  }
 }

@@ -8,57 +8,65 @@
 
 <% @issue.line_items.build if @issue.line_items.empty? && !readonly && can_add %>
 
-<div class="box tabular"
+<%# Styled like redmine_qbo's estimate and invoice editor (see line_items.css) %>
+<div class="box line-items-sheet"
      data-nested-form
      data-wrapper-selector=".line-item">
 
-  <strong><%= t :label_line_items %></strong>
+  <span class="line-items-title"><%= t :label_line_items %></span>
 
-  <table class="list line-items-table">
-    <thead>
-      <tr>
-        <th style="width:60%;"><%= t :label_description %></th>
-        <th style="width:10%;"><%= t :label_qty %></th>
-        <th style="width:10%;"><%= t :label_price %></th>
-        <th style="width:10%;"><%= t :label_total %></th>
-        <% unless readonly %>
-          <th style="width:80px;"></th>
+  <div class="line-items-wrap">
+    <table class="line-items-table line-items-editor">
+      <thead>
+        <tr>
+          <th class="line-item-number">#</th>
+          <th class="line-item-description-cell"><%= t :label_description %></th>
+          <th class="line-item-qty"><%= t :label_qty %></th>
+          <th class="line-item-price"><%= t :label_price %></th>
+          <th class="line-item-total"><%= t :label_total %></th>
+          <% unless readonly %>
+            <th class="actions"></th>
+          <% end %>
+        </tr>
+      </thead>
+
+      <tbody data-nested-form-container>
+        <%= f.fields_for :line_items do |item_form| %>
+          <%= render "line_items/line_item_fields",
+                f: item_form,
+                readonly: readonly,
+                **permissions %>
         <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="line-items-bottom">
+    <% if !readonly && can_add %>
+      <template data-nested-form-template>
+        <%= f.fields_for :line_items, LineItem.new, child_index: "NEW_RECORD" do |item_form| %>
+          <%= render "line_items/line_item_fields",
+                f: item_form,
+                readonly: false,
+                **permissions %>
+        <% end %>
+      </template>
+
+      <p class="line-items-buttons">
+        <button type="button"
+                class="line-items-button"
+                data-nested-form-add>
+          <%= l(:button_add) %>
+        </button>
+      </p>
+    <% end %>
+
+    <table class="line-items-totals">
+      <tr class="line-items-grand-total">
+        <th><%= t :label_total %></th>
+        <td id="line-items-grand-total">0.00</td>
       </tr>
-    </thead>
-
-    <tbody data-nested-form-container>
-      <%= f.fields_for :line_items do |item_form| %>
-        <%= render "line_items/line_item_fields",
-              f: item_form,
-              readonly: readonly,
-              **permissions %>
-      <% end %>
-    </tbody>
-  </table>
-
-  <p class="line-items-grand-total">
-    <strong><%= t :label_total %>:</strong>
-    <span id="line-items-grand-total">0.00</span>
-  </p>
-
-  <% if !readonly && can_add %>
-    <template data-nested-form-template>
-      <%= f.fields_for :line_items, LineItem.new, child_index: "NEW_RECORD" do |item_form| %>
-        <%= render "line_items/line_item_fields",
-              f: item_form,
-              readonly: false,
-              **permissions %>
-      <% end %>
-    </template>
-
-    <p>
-      <button type="button"
-              class="icon icon-add"
-              data-nested-form-add>
-        <%= l(:button_add) %>
-      </button>
-    </p>
-  <% end %>
+    </table>
+  </div>
 
 </div>

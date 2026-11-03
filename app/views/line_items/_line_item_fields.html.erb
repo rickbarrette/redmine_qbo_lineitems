@@ -11,19 +11,22 @@
   <%= f.hidden_field :_destroy %>
   <%= f.hidden_field :item_id, class: "item-id-field" %>
 
-  <td data-label="<%= t :label_description %>">
+  <%# Numbered by a CSS counter, so removed (hidden) rows are skipped %>
+  <td class="line-item-number"></td>
+
+  <td class="line-item-description-cell" data-label="<%= t :label_description %>">
+    <% if billed %>
+      <span class="line-item-billed-badge" title="<%= l(:text_line_item_billed) %>"><%= l(:label_billed) %></span>
+    <% end %>
     <%= f.text_field :description,
           placeholder: l(:label_description),
           class: "line-item-description",
           autocomplete: "off",
           no_label: true,
           disabled: locked %>
-    <% if billed %>
-      <span class="line-item-billed-badge" title="<%= l(:text_line_item_billed) %>"><%= l(:label_billed) %></span>
-    <% end %>
   </td>
 
-  <td data-label="<%= t :label_qty %>">
+  <td class="line-item-qty" data-label="<%= t :label_qty %>">
     <%# Fractional quantities are allowed (e.g. 0.5 hours, 2.5 quarts) %>
     <%= f.number_field :quantity,
           step: "any",
@@ -34,8 +37,9 @@
           disabled: locked %>
   </td>
 
-  <td data-label="<%= t :label_price %>">
+  <td class="line-item-price" data-label="<%= t :label_price %>">
     <%= f.text_field :unit_price,
+          value: (number_with_precision(item.unit_price, precision: 2) unless item.unit_price.nil?),
           class: "price-field",
           inputmode: "decimal",
           autocomplete: "off",
@@ -43,7 +47,7 @@
           disabled: locked %>
   </td>
 
-  <td class="line-total" data-label="<%= t :label_total %>">
+  <td class="line-item-total line-total" data-label="<%= t :label_total %>">
     0.00
   </td>
 
@@ -51,10 +55,10 @@
     <td class="actions">
       <% if removable %>
         <button type="button"
-                class="icon-only icon-del"
+                class="line-item-remove-button"
                 title="<%= l(:label_remove) %>"
-                data-nested-form-remove>
-        </button>
+                aria-label="<%= l(:label_remove) %>"
+                data-nested-form-remove><%= sprite_icon('del') %></button>
       <% end %>
     </td>
   <% end %>

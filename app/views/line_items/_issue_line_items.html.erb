@@ -24,10 +24,10 @@
           <% total += line_total %>
 
           <tr>
-            <td><%= h item.description %></td>
-            <td><%= item.quantity %></td>
-            <td><%= number_to_currency(item.unit_price) %></td>
-            <td><%= number_to_currency(line_total) %></td>
+            <td data-label="<%= t :label_description %>"><%= h item.description %></td>
+            <td data-label="<%= t :label_qty %>"><%= item.quantity %></td>
+            <td data-label="<%= t :label_price %>"><%= number_to_currency(item.unit_price) %></td>
+            <td data-label="<%= t :label_total %>"><%= number_to_currency(line_total) %></td>
           </tr>
         <% end %>
       </tbody>

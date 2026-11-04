@@ -10,6 +10,10 @@
       let ac = $(this).autocomplete({
         appendTo: "body",
         minLength: 2,
+        // Kept on screen: on a phone a wide list of suggestions widened the page, which could leave the page
+        // stuck scrolled to the side
+        classes: { "ui-autocomplete": "line-item-suggestions" },
+        position: { my: "left top", at: "left bottom", collision: "flipfit" },
 
         source: function(request, response) {
           $.getJSON("/items/autocomplete", { q: request.term })

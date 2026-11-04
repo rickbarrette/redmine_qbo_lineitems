@@ -244,7 +244,17 @@ table.list.line-items-table td:nth-child(n+2) {
   pointer-events: none;
 }
 
-/* Item suggestions */
+/* Item suggestions: no wider than the screen, long descriptions wrap */
+.ui-autocomplete.line-item-suggestions {
+  max-width: calc(100vw - 16px);
+  box-sizing: border-box;
+}
+
+.line-item-suggestions .autocomplete-item {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
 .autocomplete-item {
   line-height: 1.2;
 }
@@ -261,6 +271,13 @@ table.list.line-items-table td:nth-child(n+2) {
 .item-description {
   font-size: 0.70em;
   color: #999;
+}
+
+/* Phones and narrow windows: Redmine's page wrapper hides what sticks out sideways but can still be scrolled
+   sideways by the browser (bringing a field or list into view), with no way to swipe it back. Clipping
+   instead keeps it in place. */
+@media screen and (max-width: 899px) {
+  #wrapper { overflow-x: clip; }
 }
 
 /* Phones: each line becomes a small card (number, description and delete; quantity, price and total) */

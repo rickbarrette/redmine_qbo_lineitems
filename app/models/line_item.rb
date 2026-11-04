@@ -17,6 +17,23 @@ class LineItem < ApplicationRecord
   validates :unit_price, numericality: { greater_than_or_equal_to: 0 }
   before_save :total
 
+  # The fields whose changes are recorded in the issue's history
+  JOURNALED_ATTRIBUTES = %w[description quantity unit_price item_id].freeze
+
+  # A one-line summary for the issue's history, e.g. "Brake pads: 2 × $45.00".
+  # With saved: true it describes the line as it is in the database, before any unsaved changes.
+  def journal_summary(saved: false)
+    desc, qty, price = %w[description quantity unit_price].map { |a| saved ? attribute_in_database(a) : self[a] }
+    qty = ActiveSupport::NumberHelper.number_to_rounded(qty.to_d, precision: 4, strip_insignificant_zeros: true)
+    price = ActiveSupport::NumberHelper.number_to_currency(price.to_d)
+    "#{desc.to_s.squish}: #{qty} × #{price}"
+  end
+
+  # True when a field shown in the issue's history has an unsaved change
+  def journaled_changes?
+    (changed & JOURNALED_ATTRIBUTES).any?
+  end
+
   private
 
   def total

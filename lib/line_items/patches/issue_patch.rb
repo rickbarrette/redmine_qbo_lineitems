@@ -28,6 +28,53 @@ module LineItems
         end
         accepts_nested_attributes_for :line_items, allow_destroy: true, reject_if: proc { |attrs| attrs['description'].blank? }
 
+        # Record added, changed and removed line items in the issue's history (the journal Redmine is
+        # already writing for this update). Changes are collected before saving, while the old values are
+        # still known, and written after the line items are saved, so new lines have their ids.
+        # The after_update must be declared after accepts_nested_attributes_for: it then runs after the
+        # line items are saved, and before Redmine's after_save that saves the journal.
+        before_save :collect_line_item_changes
+        after_update :journalize_line_item_changes
+
+        def collect_line_item_changes
+          @line_item_changes = nil
+          return unless current_journal
+
+          # Only lines touched in this request are loaded into the association, so this doesn't query
+          @line_item_changes = association(:line_items).target.filter_map do |line|
+            if line.new_record?
+              [:added, line, nil] unless line.marked_for_destruction?
+            elsif line.marked_for_destruction?
+              [:removed, line, line.journal_summary(saved: true)]
+            elsif line.journaled_changes?
+              [:changed, line, line.journal_summary(saved: true)]
+            end
+          end
+        end
+
+        def journalize_line_item_changes
+          changes = @line_item_changes
+          @line_item_changes = nil
+          return if changes.blank? || current_journal.nil?
+
+          changes.each do |action, line, old_summary|
+            case action
+            when :added
+              add_line_item_detail(line, nil, line.journal_summary) if line.persisted?
+            when :removed
+              add_line_item_detail(line, old_summary, nil) if line.destroyed?
+            when :changed
+              new_summary = line.journal_summary
+              add_line_item_detail(line, old_summary, new_summary) unless new_summary == old_summary
+            end
+          end
+        end
+
+        def add_line_item_detail(line, old_value, value)
+          current_journal.details << JournalDetail.new(property: 'line_item', prop_key: line.id.to_s,
+                                                       old_value: old_value, value: value)
+        end
+
         # Returns line items for immediate children
         def children_line_items
           LineItem.where(issue_id: self.children.pluck(:id))

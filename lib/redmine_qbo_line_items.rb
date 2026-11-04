@@ -14,6 +14,8 @@ module RedmineQboLineItems
    unless Issue.ancestors.include?(LineItems::Patches::IssuePatch)
       # Patches
       Issue.prepend LineItems::Patches::IssuePatch
+      Journal.prepend LineItems::Patches::JournalPatch
+      IssuesHelper.prepend LineItems::Patches::IssuesHelperPatch
 
       # Hooks
       LineItems::Hooks::ViewHookListener

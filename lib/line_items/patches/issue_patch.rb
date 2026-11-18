@@ -75,16 +75,6 @@ module LineItems
                                                        old_value: old_value, value: value)
         end
 
-        # Returns line items for immediate children
-        def children_line_items
-          LineItem.where(issue_id: self.children.pluck(:id))
-        end
-
-        # Calculates the total value of all child line items
-        def children_line_items_total
-          children_line_items.sum(:line_total)
-        end
-
         # Returns line items for the entire tree below this issue
         def descendant_line_items
           LineItem.where(issue_id: self.descendants.pluck(:id))
@@ -93,10 +83,6 @@ module LineItems
         # Calculates the total value of entire tree below this issue
         def descendant_line_items_total
           descendant_line_items.sum(:line_total)
-        end
-
-        def line_items_total
-          line_items.sum(:line_total)
         end
 
         # Applies line item changes from the issue form, enforcing permissions on the server (the form

@@ -21,7 +21,6 @@ en:
   label_running_total: "Running Total"
   label_total: "Total"
 
-  notice_added_from: "Added from issue #"
   
   label_billed: "Billed"
   text_line_item_billed: "Already added to a QuickBooks estimate, so it can't be changed or removed."

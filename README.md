@@ -42,6 +42,15 @@ The alternative approach would be to modify an invoice directly after it is asso
 
 ---
 
+## Screenshots
+
+All names and figures are made up.
+
+<table>
+<tr><td width="50%"><img src="Screenshots/issue.png" alt="An issue's line items"><br><sub>An issue's line items</sub></td><td width="50%"><img src="Screenshots/issue_form.png" alt="Adding line items on the issue form"><br><sub>Adding line items on the issue form</sub></td></tr>
+<tr><td width="50%"><img src="Screenshots/history.png" alt="Line item changes in the issue's history"><br><sub>Line item changes in the issue's history</sub></td><td width="50%"><img src="Screenshots/estimate.png" alt="The QuickBooks estimate made from the line items when the issue closed"><br><sub>The QuickBooks estimate made from the line items when the issue closed</sub></td></tr>
+</table>
+
 ## Installation
 
 1.  **Clone the plugin**

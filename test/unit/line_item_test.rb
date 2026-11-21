@@ -114,6 +114,23 @@ class LineItemTest < ActiveSupport::TestCase
     assert @issue.line_items.first.marked_for_destruction?
   end
 
+  def test_a_change_without_the_description_applies
+    line = add_line(@issue)
+    allow(:edit_line_items)
+    @issue.reload.line_items_attributes = { '0' => { id: line.id, quantity: '3' } }
+    assert_equal 3, @issue.line_items.first.quantity
+    assert_equal 'Brake pads', @issue.line_items.first.description
+  end
+
+  def test_clearing_the_description_is_refused
+    line = add_line(@issue)
+    allow(:edit_line_items)
+    issue = Issue.find(1)
+    issue.line_items_attributes = { '0' => { id: line.id, description: ' ' } }
+    assert_not issue.save
+    assert_equal 'Brake pads', line.reload.description
+  end
+
   def test_billed_lines_are_locked
     line = add_line(@issue, billed: true)
     allow(:edit_line_items, :delete_line_items)

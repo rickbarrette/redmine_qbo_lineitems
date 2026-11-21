@@ -26,7 +26,10 @@ module LineItems
           Rails.logger.info "[LineItems::IssuePatch] Enqueuing line item billing for issue ##{id}"
           BillLineItemsJob.perform_later(id)
         end
-        accepts_nested_attributes_for :line_items, allow_destroy: true, reject_if: proc { |attrs| attrs['description'].blank? }
+        # New rows left blank are dropped. Existing lines are never dropped for a missing description: a change
+        # that leaves it out (e.g. an API call sending only the quantity) applies, and clearing it fails validation.
+        accepts_nested_attributes_for :line_items, allow_destroy: true,
+                                                   reject_if: proc { |attrs| attrs['id'].blank? && attrs['description'].blank? }
 
         # Record added, changed and removed line items in the issue's history (the journal Redmine is
         # already writing for this update). Changes are collected before saving, while the old values are

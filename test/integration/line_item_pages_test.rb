@@ -119,6 +119,18 @@ class LineItemPagesTest < Redmine::IntegrationTest
     end
   end
 
+  def test_the_api_can_change_just_the_quantity
+    with_settings rest_api_enabled: '1' do
+      line = add_line(@issue)
+      allow(:edit_line_items)
+      put '/issues/1.json', params: { issue: { line_items_attributes: [{ id: line.id, quantity: '5' }] } },
+                            headers: credentials('jsmith')
+      assert_response :no_content
+      assert_equal 5, line.reload.quantity
+      assert_equal BigDecimal('225'), line.line_total.to_d
+    end
+  end
+
   def test_history_of_line_items_is_hidden_without_view_line_items
     journal = Journal.create!(journalized: @issue, user: User.find(2))
     JournalDetail.create!(journal: journal, property: 'line_item', prop_key: '1', value: 'Brake pads: 1 × $45.00')
